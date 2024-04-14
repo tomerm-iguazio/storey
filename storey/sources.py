@@ -24,7 +24,7 @@ import warnings
 import weakref
 from collections import defaultdict
 from datetime import datetime, timezone
-from typing import Callable, Coroutine, Iterable, List, Optional, Union
+from typing import Callable, Coroutine, Iterable, List, Optional, Tuple, Union
 
 import packaging.version
 import pandas
@@ -982,8 +982,12 @@ class ParquetSource(DataframeSource):
     :parameter end_filter: datetime. If not None, the results will be filtered by partitions
         'filter_column' <= end_filter. Default is None.
     :parameter filter_column: Optional. if not None, the results will be filtered by this column and before and/or after
+                datetime column.
     :param key_field: column to be used as key for events. can be list of columns
     :param id_field: column to be used as ID for events.
+    :param filters: other filters to use while reading the parquet.
+                    Supported operators: '=', '>=', '<=', '>', '<'.
+                    Example: ('Product', '=', 'Computer')]
     """
 
     def __init__(
@@ -993,6 +997,7 @@ class ParquetSource(DataframeSource):
         start_filter: Optional[datetime] = None,
         end_filter: Optional[datetime] = None,
         filter_column: Optional[str] = None,
+        filters: Optional[List[Tuple]] = None,
         **kwargs,
     ):
         if start_filter or end_filter:
@@ -1010,6 +1015,13 @@ class ParquetSource(DataframeSource):
             if filter_column is None:
                 raise TypeError("Filter column is required when passing start/end filters")
 
+        if filters and filter_column:
+            for filters_tuple in filters:
+                if filter_column in filters_tuple:
+                    raise ValueError(
+                        f"can not use the same column as filter_column and in filters. Column: {filter_column}."
+                    )
+
         self._paths = paths
         if isinstance(paths, str):
             self._paths = [paths]
@@ -1018,6 +1030,7 @@ class ParquetSource(DataframeSource):
         self._end_filter = end_filter
         self._filter_column = filter_column
         self._storage_options = kwargs.get("storage_options")
+        self.filters = filters
         super().__init__([], **kwargs)
 
     def _read_filtered_parquet(self, path):
@@ -1032,11 +1045,18 @@ class ParquetSource(DataframeSource):
             filters,
             self._filter_column,
         )
+        if filters and self.filters:
+            total_filters = self.filters + filters
+        elif self.filters:
+            total_filters = self.filters
+        else:
+            total_filters = filters
+
         try:
             return pandas.read_parquet(
                 path,
                 columns=self._columns,
-                filters=filters,
+                filters=total_filters,
                 storage_options=self._storage_options,
             )
         except pyarrow.lib.ArrowInvalid as ex:
@@ -1059,10 +1079,17 @@ class ParquetSource(DataframeSource):
                 self._filter_column,
             )
 
+            if filters and self.filters:
+                total_filters = self.filters + filters
+            elif self.filters:
+                total_filters = self.filters
+            else:
+                total_filters = filters
+
             return pandas.read_parquet(
                 path,
                 columns=self._columns,
-                filters=filters,
+                filters=total_filters,
                 storage_options=self._storage_options,
             )
 
@@ -1070,7 +1097,7 @@ class ParquetSource(DataframeSource):
         super()._init()
         self._dfs = []
         for path in self._paths:
-            if self._start_filter or self._end_filter:
+            if self._start_filter or self._end_filter or self.filters:
                 df = self._read_filtered_parquet(path)
             else:
                 df = pandas.read_parquet(path, columns=self._columns, storage_options=self._storage_options)
