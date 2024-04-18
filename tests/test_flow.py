@@ -4614,7 +4614,7 @@ def test_filter_by_filters(include_datetime_filter):
 
 
 def test_filter_column_double_usage():
-    with pytest.raises(ValueError, match="can not use the same column as filter_column and in filters."):
+    with pytest.raises(ValueError, match="Cannot use the same column as both the filter_column and in the filters."):
         ParquetSource(
             "/my_dir", filters=[("start_time", ">", pd.Timestamp("2020-12-31 14:00:00"))], filter_column="start_time"
         )
