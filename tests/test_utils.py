@@ -36,7 +36,7 @@ def test_ds_get_path_utils():
 def test_find_filters():
     filters = []
     find_filters([], datetime.datetime.min, datetime.datetime.max, filters, "time")
-    assert filters == [[("time", ">", datetime.datetime.min), ("time", "<=", datetime.datetime.max)]]
+    assert filters == [("time", ">", datetime.datetime.min), ("time", "<=", datetime.datetime.max)]
     filters = []
     find_filters([], None, datetime.datetime.max, filters, "time")
-    assert filters == [[("time", "<=", datetime.datetime.max)]]
+    assert filters == [("time", "<=", datetime.datetime.max)]
