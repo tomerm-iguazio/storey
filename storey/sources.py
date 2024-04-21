@@ -36,7 +36,7 @@ from nuclio_sdk import QualifiedOffset
 from .dtypes import Event, _termination_obj
 from .flow import Complete, Flow
 from .queue import SimpleAsyncQueue
-from .utils import find_filters, find_partitions, url_to_file_system
+from .utils import find_filters, find_partitions, url_to_file_system, get_combined_filters
 
 
 class AwaitableResult:
@@ -1031,7 +1031,7 @@ class ParquetSource(DataframeSource):
         self._end_filter = end_filter
         self._filter_column = filter_column
         self._storage_options = kwargs.get("storage_options")
-        self.filters = filters
+        self.filters = [filters] if filters else []
         super().__init__([], **kwargs)
 
     def _read_filtered_parquet(self, path):
@@ -1046,13 +1046,7 @@ class ParquetSource(DataframeSource):
             filters,
             self._filter_column,
         )
-        if filters and self.filters:
-            total_filters = self.filters + filters
-        elif self.filters:
-            total_filters = self.filters
-        else:
-            total_filters = filters
-
+        total_filters = get_combined_filters(datetime_filters=filters, filters=self.filters)
         try:
             return pandas.read_parquet(
                 path,
@@ -1079,7 +1073,7 @@ class ParquetSource(DataframeSource):
                 filters,
                 self._filter_column,
             )
-
+            # todo with combined function
             if filters and self.filters:
                 total_filters = self.filters + filters
             elif self.filters:

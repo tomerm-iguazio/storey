@@ -331,7 +331,7 @@ def find_filters(partitions_time_attributes, start, end, filters, filter_column)
         _create_filter_tuple(end, first_uncommon, "<", middle_range_filter)
     # for start=1.2.2018 08:53:15, end=5.2.2018 16:24:31, this will append to filters
     # [(year=2018, month=2, 1<day<5)]
-    filters.extend(middle_range_filter)
+    filters.append(middle_range_filter)
 
     # for start=1.2.2018 08:53:15, end=5.2.2018 16:24:31, this method will append to filters
     # [(year=2018, month=2,day<=5, filter_column<5.2.2018 16:24:31)]
@@ -344,3 +344,15 @@ def find_filters(partitions_time_attributes, start, end, filters, filter_column)
         filters,
         filter_column,
     )
+
+def get_combined_filters(datetime_filters, filters):
+    datetime_filter_condition = datetime_filters and any(inner_value for inner_value in datetime_filters if inner_value)
+    filters_condition = filters and any(inner_value for inner_value in filters if inner_value)
+    if datetime_filter_condition and filters_condition:
+        total_filters = filters + datetime_filters
+    elif filters_condition:
+        total_filters = filters
+    else:
+        total_filters = datetime_filters
+
+
