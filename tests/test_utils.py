@@ -16,7 +16,12 @@ import datetime
 
 from fsspec.implementations.local import LocalFileSystem
 
-from storey.utils import find_filters, get_remaining_path, url_to_file_system
+from storey.utils import (
+    find_filters,
+    get_combined_filters,
+    get_remaining_path,
+    url_to_file_system,
+)
 
 
 def test_get_path_utils():
@@ -36,7 +41,32 @@ def test_ds_get_path_utils():
 def test_find_filters():
     filters = []
     find_filters([], datetime.datetime.min, datetime.datetime.max, filters, "time")
-    assert filters == [("time", ">", datetime.datetime.min), ("time", "<=", datetime.datetime.max)]
+    assert filters == [[("time", ">", datetime.datetime.min), ("time", "<=", datetime.datetime.max)]]
     filters = []
     find_filters([], None, datetime.datetime.max, filters, "time")
-    assert filters == [("time", "<=", datetime.datetime.max)]
+    assert filters == [[("time", "<=", datetime.datetime.max)]]
+    filters = []
+    find_filters([], None, None, filters, None)
+    assert filters == [[]]
+
+
+def test_get_combined_filters():
+    min_filter = ("time", ">", datetime.datetime.min)
+    max_filter = ("time", "<=", datetime.datetime.max)
+    city_filter = ("city", "=", "Tel Aviv")
+
+    assert get_combined_filters(datetime_filters=[[]], filters=[]) == [[]]
+    assert get_combined_filters(datetime_filters=[[max_filter]], filters=[]) == [[max_filter]]
+    assert get_combined_filters(datetime_filters=[[]], filters=[city_filter]) == [[city_filter]]
+
+    datetime_filter = [[min_filter, max_filter]]
+    filters = [city_filter]
+    combined_filters = get_combined_filters(datetime_filters=datetime_filter, filters=filters)
+    assert combined_filters == [[min_filter, max_filter, city_filter]]
+    datetime_filter = [[min_filter], [max_filter]]
+    filters = [city_filter, ("age", ">=", "40")]
+    combined_filters = get_combined_filters(datetime_filters=datetime_filter, filters=filters)
+    assert combined_filters == [
+        [min_filter, *filters],
+        [max_filter, *filters],
+    ]

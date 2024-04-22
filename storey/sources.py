@@ -36,7 +36,12 @@ from nuclio_sdk import QualifiedOffset
 from .dtypes import Event, _termination_obj
 from .flow import Complete, Flow
 from .queue import SimpleAsyncQueue
-from .utils import find_filters, find_partitions, url_to_file_system, get_combined_filters
+from .utils import (
+    find_filters,
+    find_partitions,
+    get_combined_filters,
+    url_to_file_system,
+)
 
 
 class AwaitableResult:
@@ -997,7 +1002,7 @@ class ParquetSource(DataframeSource):
         start_filter: Optional[datetime] = None,
         end_filter: Optional[datetime] = None,
         filter_column: Optional[str] = None,
-        filters: Optional[List[Tuple]] = None,
+        filters: Optional[list[tuple]] = None,
         **kwargs,
     ):
         if start_filter or end_filter:
@@ -1014,15 +1019,23 @@ class ParquetSource(DataframeSource):
 
             if filter_column is None:
                 raise TypeError("Filter column is required when passing start/end filters")
+        filters = filters if filters else []
 
-        if filters and filter_column:
-            for filters_tuple in filters:
-                if filter_column in filters_tuple:
+        if not all(isinstance(item, Tuple) for item in filters):
+            raise ValueError(f"ParquetSource supports filters only as a list of tuples!" f"Current filters: {filters}")
+
+        for filters_tuple in filters:
+            if filter_column and filter_column in filters_tuple:
+                raise ValueError(
+                    f"Cannot use the same column as both the filter_column and in the filters."
+                    f" Column: {filter_column}."
+                )
+            for filter_argument in filters_tuple:
+                if isinstance(filter_argument, (pd.Timestamp, datetime)):
                     raise ValueError(
-                        f"Cannot use the same column as both the filter_column and in the filters."
-                        f" Column: {filter_column}."
+                        f"Cannot use datetime values in filters. For these types, "
+                        f"use start_filter and end_filter parameters. Current filters: {filters}"
                     )
-
         self._paths = paths
         if isinstance(paths, str):
             self._paths = [paths]
@@ -1031,7 +1044,7 @@ class ParquetSource(DataframeSource):
         self._end_filter = end_filter
         self._filter_column = filter_column
         self._storage_options = kwargs.get("storage_options")
-        self.filters = [filters] if filters else []
+        self.filters = filters
         super().__init__([], **kwargs)
 
     def _read_filtered_parquet(self, path):
@@ -1073,13 +1086,7 @@ class ParquetSource(DataframeSource):
                 filters,
                 self._filter_column,
             )
-            # todo with combined function
-            if filters and self.filters:
-                total_filters = self.filters + filters
-            elif self.filters:
-                total_filters = self.filters
-            else:
-                total_filters = filters
+            total_filters = get_combined_filters(datetime_filters=filters, filters=self.filters)
 
             return pandas.read_parquet(
                 path,

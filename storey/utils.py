@@ -13,6 +13,7 @@
 # limitations under the License.
 #
 import base64
+import copy
 import hashlib
 import os
 import struct
@@ -345,14 +346,24 @@ def find_filters(partitions_time_attributes, start, end, filters, filter_column)
         filter_column,
     )
 
-def get_combined_filters(datetime_filters, filters):
-    datetime_filter_condition = datetime_filters and any(inner_value for inner_value in datetime_filters if inner_value)
-    filters_condition = filters and any(inner_value for inner_value in filters if inner_value)
-    if datetime_filter_condition and filters_condition:
-        total_filters = filters + datetime_filters
-    elif filters_condition:
-        total_filters = filters
-    else:
-        total_filters = datetime_filters
 
+def get_combined_filters(datetime_filters=None, filters=None):
+    datetime_filters = copy.deepcopy(datetime_filters) or [[]]
+    filters = copy.deepcopy(filters) or []
+    or_filter_exists = False
+    filter_tuple_exists = False
 
+    for or_filter in datetime_filters:
+        for tuple_filter in filters:
+            if tuple_filter:
+                filter_tuple_exists = True
+                if or_filter:
+                    or_filter_exists = True
+                    or_filter.append(tuple_filter)
+            elif or_filter:
+                or_filter_exists = True
+
+    #  datatime filters doesn't exists or [[],[]] :
+    if not or_filter_exists and filter_tuple_exists:
+        return [filters]
+    return datetime_filters
