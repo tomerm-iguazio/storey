@@ -17,8 +17,8 @@ import datetime
 from fsspec.implementations.local import LocalFileSystem
 
 from storey.utils import (
-    find_filters,
     combine_filters,
+    find_filters,
     get_remaining_path,
     url_to_file_system,
 )
