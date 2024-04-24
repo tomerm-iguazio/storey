@@ -4629,11 +4629,3 @@ def test_filters_type():
             additional_filters=[[("city", "=", "Tel Aviv")], [("age", ">=", "40")]],
             filter_column="start_time",
         )
-
-
-def test_datetime_in_filters():
-    with pytest.raises(ValueError, match="Cannot use datetime values in additional_filters."):
-        ParquetSource(
-            "/my_dir",
-            additional_filters=[("city", "=", "Tel Aviv"), ("start_time", ">", pd.Timestamp("2020-12-31 14:00:00"))],
-        )

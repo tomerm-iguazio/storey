@@ -1029,12 +1029,7 @@ class ParquetSource(DataframeSource):
                     f"Cannot use the same column as both filter_column and in additional_filters."
                     f" Column: {filter_column}."
                 )
-            for filter_argument in filters_tuple:
-                if isinstance(filter_argument, (pd.Timestamp, datetime)):
-                    raise ValueError(
-                        f"Cannot use datetime values in additional_filters. For these types, "
-                        f"use start_filter and end_filter parameters. Current additional_filters: {additional_filters}"
-                    )
+
         self._paths = paths
         if isinstance(paths, str):
             self._paths = [paths]
