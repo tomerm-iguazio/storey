@@ -347,7 +347,7 @@ def find_filters(partitions_time_attributes, start, end, filters, filter_column)
     )
 
 
-def combine_filters(datetime_filters=None, additional_filters=None):
+def combine_filters(datetime_filters, additional_filters):
     datetime_filters = copy.deepcopy(datetime_filters) or [[]]
     additional_filters = copy.deepcopy(additional_filters) or []
     or_filter_exists = False
