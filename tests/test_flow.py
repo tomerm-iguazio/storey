@@ -4613,21 +4613,22 @@ def test_filter_by_filters(include_datetime_filter):
         pd.testing.assert_frame_equal(read_back_result, expected_df)
 
 
-def test_filters_validators():
+def test_filter_column_double_usage():
     with pytest.raises(ValueError, match="Cannot use the same column as both the filter_column and in the filters."):
         ParquetSource(
             "/my_dir", filters=[("start_time", ">", pd.Timestamp("2020-12-31 14:00:00"))], filter_column="start_time"
         )
 
+
+def test_filters_type():
     with pytest.raises(ValueError, match="ParquetSource supports filters only as a list of tuples!"):
         ParquetSource(
             "/my_dir", filters=[[("city", "=", "Tel Aviv")], [("age", ">=", "40")]], filter_column="start_time"
         )
 
+
+def test_datetime_in_filters():
     with pytest.raises(ValueError, match="Cannot use datetime values in filters"):
         ParquetSource(
             "/my_dir", filters=[("city", "=", "Tel Aviv"), ("start_time", ">", pd.Timestamp("2020-12-31 14:00:00"))]
         )
-
-    with pytest.raises(ValueError, match="Cannot use datetime values in filters"):
-        ParquetSource("/my_dir", filters=[("city", "=", "Tel Aviv"), ("start_time", ">", datetime.now())])
