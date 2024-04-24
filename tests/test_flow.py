@@ -4613,15 +4613,6 @@ def test_filter_by_filters(include_datetime_filter):
         pd.testing.assert_frame_equal(read_back_result, expected_df)
 
 
-def test_filter_column_double_usage():
-    with pytest.raises(ValueError, match="Cannot use the same column as both filter_column and in additional_filters."):
-        ParquetSource(
-            "/my_dir",
-            additional_filters=[("start_time", ">", pd.Timestamp("2020-12-31 14:00:00"))],
-            filter_column="start_time",
-        )
-
-
 def test_filters_type():
     with pytest.raises(ValueError, match="ParquetSource supports additional_filters only as a list of tuples."):
         ParquetSource(

@@ -1024,13 +1024,6 @@ class ParquetSource(DataframeSource):
                 f" Current additional_filters: {additional_filters}"
             )
 
-        for filters_tuple in additional_filters:
-            if filter_column and filter_column in filters_tuple:
-                raise ValueError(
-                    f"Cannot use the same column as both filter_column and in additional_filters."
-                    f" Column: {filter_column}."
-                )
-
         self._paths = paths
         if isinstance(paths, str):
             self._paths = [paths]
