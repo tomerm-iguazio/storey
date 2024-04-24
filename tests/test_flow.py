@@ -4599,7 +4599,7 @@ def test_filter_by_filters(include_datetime_filter):
     )
     with tempfile.TemporaryDirectory() as temp_dir:
         df.to_parquet(temp_dir, partition_cols=["my_city"])
-        source_kwargs = {"filters": [("my_city", "=", "tel aviv")]}
+        source_kwargs = {"additional_filters": [("my_city", "=", "tel aviv")]}
         expected_df = pd.DataFrame(tel_aviv_data, columns=columns)
         if include_datetime_filter:
             source_kwargs["start_filter"] = pd.Timestamp("2019-01-01 00:00:00")
