@@ -347,14 +347,14 @@ def find_filters(partitions_time_attributes, start, end, filters, filter_column)
     )
 
 
-def get_combined_filters(datetime_filters=None, filters=None):
+def get_combined_filters(datetime_filters=None, additional_filters=None):
     datetime_filters = copy.deepcopy(datetime_filters) or [[]]
-    filters = copy.deepcopy(filters) or []
+    additional_filters = copy.deepcopy(additional_filters) or []
     or_filter_exists = False
     filter_tuple_exists = False
 
     for or_filter in datetime_filters:
-        for tuple_filter in filters:
+        for tuple_filter in additional_filters:
             if tuple_filter:
                 filter_tuple_exists = True
                 if or_filter:
@@ -365,5 +365,5 @@ def get_combined_filters(datetime_filters=None, filters=None):
 
     #  datatime filters doesn't exists or [[],[]] :
     if not or_filter_exists and filter_tuple_exists:
-        return [filters]
+        return [additional_filters]
     return datetime_filters

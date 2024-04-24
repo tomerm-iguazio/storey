@@ -24,7 +24,7 @@ import warnings
 import weakref
 from collections import defaultdict
 from datetime import datetime, timezone
-from typing import Callable, Coroutine, Iterable, List, Optional, Tuple, Union
+from typing import Callable, Coroutine, Iterable, List, Optional, Union
 
 import packaging.version
 import pandas
@@ -990,7 +990,7 @@ class ParquetSource(DataframeSource):
                 datetime column.
     :param key_field: column to be used as key for events. can be list of columns
     :param id_field: column to be used as ID for events.
-    :param filters: other filters to use while reading the parquet.
+    :param additional_filters: other filters to use while reading the parquet.
                     Supported operators: '=', '>=', '<=', '>', '<'.
                     Example: ('Product', '=', 'Computer')]
     """
@@ -1002,7 +1002,7 @@ class ParquetSource(DataframeSource):
         start_filter: Optional[datetime] = None,
         end_filter: Optional[datetime] = None,
         filter_column: Optional[str] = None,
-        filters: Optional[list[tuple]] = None,
+        additional_filters: Optional[list[tuple]] = None,
         **kwargs,
     ):
         if start_filter or end_filter:
@@ -1019,22 +1019,25 @@ class ParquetSource(DataframeSource):
 
             if filter_column is None:
                 raise TypeError("Filter column is required when passing start/end filters")
-        filters = filters if filters else []
+        additional_filters = additional_filters or []
 
-        if not all(isinstance(item, Tuple) for item in filters):
-            raise ValueError(f"ParquetSource supports filters only as a list of tuples. Current filters: {filters}")
+        if not all(isinstance(item, tuple) for item in additional_filters):
+            raise ValueError(
+                f"ParquetSource supports additional_filters only as a list of tuples."
+                f" Current additional_filters: {additional_filters}"
+            )
 
-        for filters_tuple in filters:
+        for filters_tuple in additional_filters:
             if filter_column and filter_column in filters_tuple:
                 raise ValueError(
-                    f"Cannot use the same column as both the filter_column and in the filters."
+                    f"Cannot use the same column as both the filter_column and in the additional_filters."
                     f" Column: {filter_column}."
                 )
             for filter_argument in filters_tuple:
                 if isinstance(filter_argument, (pd.Timestamp, datetime)):
                     raise ValueError(
-                        f"Cannot use datetime values in filters. For these types, "
-                        f"use start_filter and end_filter parameters. Current filters: {filters}"
+                        f"Cannot use datetime values in additional_filters. For these types, "
+                        f"use start_filter and end_filter parameters. Current additional_filters: {additional_filters}"
                     )
         self._paths = paths
         if isinstance(paths, str):
@@ -1044,22 +1047,24 @@ class ParquetSource(DataframeSource):
         self._end_filter = end_filter
         self._filter_column = filter_column
         self._storage_options = kwargs.get("storage_options")
-        self.filters = filters
+        self.additional_filters = additional_filters
         super().__init__([], **kwargs)
 
     def _read_filtered_parquet(self, path):
         fs, file_path = url_to_file_system(path, self._storage_options)
 
         partitions_time_attributes = find_partitions(path, fs)
-        filters = []
+        datetime_filters = []
         find_filters(
             partitions_time_attributes,
             self._start_filter,
             self._end_filter,
-            filters,
+            datetime_filters,
             self._filter_column,
         )
-        total_filters = get_combined_filters(datetime_filters=filters, filters=self.filters)
+        total_filters = get_combined_filters(
+            datetime_filters=datetime_filters, additional_filters=self.additional_filters
+        )
         try:
             return pandas.read_parquet(
                 path,
@@ -1078,15 +1083,17 @@ class ParquetSource(DataframeSource):
                 start_filter = self._start_filter.replace(tzinfo=pytz.utc)
                 end_filter = self._end_filter.replace(tzinfo=pytz.utc)
 
-            filters = []
+            datetime_filters = []
             find_filters(
                 partitions_time_attributes,
                 start_filter,
                 end_filter,
-                filters,
+                datetime_filters,
                 self._filter_column,
             )
-            total_filters = get_combined_filters(datetime_filters=filters, filters=self.filters)
+            total_filters = get_combined_filters(
+                datetime_filters=datetime_filters, additional_filters=self.additional_filters
+            )
 
             return pandas.read_parquet(
                 path,
@@ -1099,7 +1106,7 @@ class ParquetSource(DataframeSource):
         super()._init()
         self._dfs = []
         for path in self._paths:
-            if self._start_filter or self._end_filter or self.filters:
+            if self._start_filter or self._end_filter or self.additional_filters:
                 df = self._read_filtered_parquet(path)
             else:
                 df = pandas.read_parquet(path, columns=self._columns, storage_options=self._storage_options)
