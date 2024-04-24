@@ -1022,7 +1022,7 @@ class ParquetSource(DataframeSource):
         filters = filters if filters else []
 
         if not all(isinstance(item, Tuple) for item in filters):
-            raise ValueError(f"ParquetSource supports filters only as a list of tuples!" f"Current filters: {filters}")
+            raise ValueError(f"ParquetSource supports filters only as a list of tuples. Current filters: {filters}")
 
         for filters_tuple in filters:
             if filter_column and filter_column in filters_tuple:
