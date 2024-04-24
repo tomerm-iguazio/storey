@@ -18,7 +18,7 @@ from fsspec.implementations.local import LocalFileSystem
 
 from storey.utils import (
     find_filters,
-    get_combined_filters,
+    combine_filters,
     get_remaining_path,
     url_to_file_system,
 )
@@ -50,22 +50,22 @@ def test_find_filters():
     assert filters == [[]]
 
 
-def test_get_combined_filters():
+def test_combine_filters():
     min_filter = ("time", ">", datetime.datetime.min)
     max_filter = ("time", "<=", datetime.datetime.max)
     city_filter = ("city", "=", "Tel Aviv")
 
-    assert get_combined_filters(datetime_filters=[[]], additional_filters=[]) == [[]]
-    assert get_combined_filters(datetime_filters=[[max_filter]], additional_filters=[]) == [[max_filter]]
-    assert get_combined_filters(datetime_filters=[[]], additional_filters=[city_filter]) == [[city_filter]]
+    assert combine_filters(datetime_filters=[[]], additional_filters=[]) == [[]]
+    assert combine_filters(datetime_filters=[[max_filter]], additional_filters=[]) == [[max_filter]]
+    assert combine_filters(datetime_filters=[[]], additional_filters=[city_filter]) == [[city_filter]]
 
     datetime_filter = [[min_filter, max_filter]]
     additional_filters = [city_filter]
-    combined_filters = get_combined_filters(datetime_filters=datetime_filter, additional_filters=additional_filters)
+    combined_filters = combine_filters(datetime_filters=datetime_filter, additional_filters=additional_filters)
     assert combined_filters == [[min_filter, max_filter, city_filter]]
     datetime_filter = [[min_filter], [max_filter]]
     additional_filters = [city_filter, ("age", ">=", "40")]
-    combined_filters = get_combined_filters(datetime_filters=datetime_filter, additional_filters=additional_filters)
+    combined_filters = combine_filters(datetime_filters=datetime_filter, additional_filters=additional_filters)
     assert combined_filters == [
         [min_filter, *additional_filters],
         [max_filter, *additional_filters],

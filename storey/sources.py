@@ -39,7 +39,7 @@ from .queue import SimpleAsyncQueue
 from .utils import (
     find_filters,
     find_partitions,
-    get_combined_filters,
+    combine_filters,
     url_to_file_system,
 )
 
@@ -1031,7 +1031,7 @@ class ParquetSource(DataframeSource):
         for filters_tuple in additional_filters:
             if filter_column and filter_column in filters_tuple:
                 raise ValueError(
-                    f"Cannot use the same column as both the filter_column and in the additional_filters."
+                    f"Cannot use the same column as both filter_column and in additional_filters."
                     f" Column: {filter_column}."
                 )
             for filter_argument in filters_tuple:
@@ -1063,7 +1063,7 @@ class ParquetSource(DataframeSource):
             datetime_filters,
             self._filter_column,
         )
-        total_filters = get_combined_filters(
+        total_filters = combine_filters(
             datetime_filters=datetime_filters, additional_filters=self._additional_filters
         )
         try:
@@ -1092,7 +1092,7 @@ class ParquetSource(DataframeSource):
                 datetime_filters,
                 self._filter_column,
             )
-            total_filters = get_combined_filters(
+            total_filters = combine_filters(
                 datetime_filters=datetime_filters, additional_filters=self._additional_filters
             )
 
