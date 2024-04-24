@@ -988,6 +988,7 @@ class ParquetSource(DataframeSource):
     :param additional_filters: other filters to use while reading the parquet.
                     Supported operators: '=', '>=', '<=', '>', '<'.
                     Example: ('Product', '=', 'Computer')]
+    For all supported filters, please see:
     https://arrow.apache.org/docs/python/generated/pyarrow.parquet.ParquetDataset.html
     """
 
