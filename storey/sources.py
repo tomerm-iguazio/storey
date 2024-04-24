@@ -993,6 +993,7 @@ class ParquetSource(DataframeSource):
     :param additional_filters: other filters to use while reading the parquet.
                     Supported operators: '=', '>=', '<=', '>', '<'.
                     Example: ('Product', '=', 'Computer')]
+    https://arrow.apache.org/docs/python/generated/pyarrow.parquet.ParquetDataset.html
     """
 
     def __init__(
@@ -1047,7 +1048,7 @@ class ParquetSource(DataframeSource):
         self._end_filter = end_filter
         self._filter_column = filter_column
         self._storage_options = kwargs.get("storage_options")
-        self.additional_filters = additional_filters
+        self._additional_filters = additional_filters
         super().__init__([], **kwargs)
 
     def _read_filtered_parquet(self, path):
@@ -1063,7 +1064,7 @@ class ParquetSource(DataframeSource):
             self._filter_column,
         )
         total_filters = get_combined_filters(
-            datetime_filters=datetime_filters, additional_filters=self.additional_filters
+            datetime_filters=datetime_filters, additional_filters=self._additional_filters
         )
         try:
             return pandas.read_parquet(
@@ -1092,7 +1093,7 @@ class ParquetSource(DataframeSource):
                 self._filter_column,
             )
             total_filters = get_combined_filters(
-                datetime_filters=datetime_filters, additional_filters=self.additional_filters
+                datetime_filters=datetime_filters, additional_filters=self._additional_filters
             )
 
             return pandas.read_parquet(
@@ -1106,7 +1107,7 @@ class ParquetSource(DataframeSource):
         super()._init()
         self._dfs = []
         for path in self._paths:
-            if self._start_filter or self._end_filter or self.additional_filters:
+            if self._start_filter or self._end_filter or self._additional_filters:
                 df = self._read_filtered_parquet(path)
             else:
                 df = pandas.read_parquet(path, columns=self._columns, storage_options=self._storage_options)
