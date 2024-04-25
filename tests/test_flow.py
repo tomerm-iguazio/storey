@@ -17,6 +17,7 @@ import copy
 import math
 import os
 import queue
+import tempfile
 import time
 import traceback
 import uuid
@@ -4580,3 +4581,42 @@ def test_empty_filter_result():
         pd.testing.assert_frame_equal(read_back_result, pd.DataFrame({}))
     finally:
         os.remove(path)
+
+
+@pytest.mark.parametrize("include_datetime_filter", [True, False])
+def test_filter_by_filters(include_datetime_filter):
+    columns = ["my_string", "my_time", "my_city"]
+    tel_aviv_data = [
+        ["dina", pd.Timestamp("2019-07-01 00:00:00"), "tel aviv"],
+        ["uri", pd.Timestamp("2018-12-30 09:00:00"), "tel aviv"],
+    ]
+    df = pd.DataFrame(
+        [
+            *tel_aviv_data,
+            ["katya", pd.Timestamp("2020-12-31 14:00:00"), "hod hasharon"],
+        ],
+        columns=columns,
+    )
+    with tempfile.TemporaryDirectory() as temp_dir:
+        df.to_parquet(temp_dir, partition_cols=["my_city"])
+        source_kwargs = {"additional_filters": [("my_city", "=", "tel aviv")]}
+        expected_df = pd.DataFrame(tel_aviv_data, columns=columns)
+        if include_datetime_filter:
+            source_kwargs["start_filter"] = pd.Timestamp("2019-01-01 00:00:00")
+            source_kwargs["end_filter"] = pd.Timestamp("2021-01-01 00:00:00")
+            source_kwargs["filter_column"] = "my_time"
+            expected_df = pd.DataFrame([tel_aviv_data[0]], columns=columns)
+        expected_df.set_index("my_string", inplace=True)
+
+        controller = build_flow([ParquetSource(temp_dir, **source_kwargs), ReduceToDataFrame(index="my_string")]).run()
+        read_back_result = controller.await_termination()
+        pd.testing.assert_frame_equal(read_back_result, expected_df)
+
+
+def test_filters_type():
+    with pytest.raises(ValueError, match="ParquetSource supports additional_filters only as a list of tuples."):
+        ParquetSource(
+            "/my_dir",
+            additional_filters=[[("city", "=", "Tel Aviv")], [("age", ">=", "40")]],
+            filter_column="start_time",
+        )

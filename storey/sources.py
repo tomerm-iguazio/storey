@@ -982,8 +982,14 @@ class ParquetSource(DataframeSource):
     :parameter end_filter: datetime. If not None, the results will be filtered by partitions
         'filter_column' <= end_filter. Default is None.
     :parameter filter_column: Optional. if not None, the results will be filtered by this column and before and/or after
+                datetime column.
     :param key_field: column to be used as key for events. can be list of columns
     :param id_field: column to be used as ID for events.
+    :param additional_filters: other filters to use while reading the parquet.
+                    Supported operators: '=', '>=', '<=', '>', '<'.
+                    Example: ('Product', '=', 'Computer')]
+    For all supported filters, please see:
+    https://arrow.apache.org/docs/python/generated/pyarrow.parquet.ParquetDataset.html
     """
 
     def __init__(
@@ -993,6 +999,7 @@ class ParquetSource(DataframeSource):
         start_filter: Optional[datetime] = None,
         end_filter: Optional[datetime] = None,
         filter_column: Optional[str] = None,
+        additional_filters: Optional[list[tuple]] = None,
         **kwargs,
     ):
         if start_filter or end_filter:
@@ -1009,6 +1016,13 @@ class ParquetSource(DataframeSource):
 
             if filter_column is None:
                 raise TypeError("Filter column is required when passing start/end filters")
+        additional_filters = additional_filters or []
+
+        if not all(isinstance(item, tuple) for item in additional_filters):
+            raise ValueError(
+                f"ParquetSource supports additional_filters only as a list of tuples."
+                f" Current additional_filters: {additional_filters}"
+            )
 
         self._paths = paths
         if isinstance(paths, str):
@@ -1018,6 +1032,7 @@ class ParquetSource(DataframeSource):
         self._end_filter = end_filter
         self._filter_column = filter_column
         self._storage_options = kwargs.get("storage_options")
+        self._additional_filters = additional_filters
         super().__init__([], **kwargs)
 
     def _read_filtered_parquet(self, path):
@@ -1032,6 +1047,8 @@ class ParquetSource(DataframeSource):
             filters,
             self._filter_column,
         )
+        if filters and self._additional_filters:
+            filters[0] += self._additional_filters
         try:
             return pandas.read_parquet(
                 path,
@@ -1058,6 +1075,8 @@ class ParquetSource(DataframeSource):
                 filters,
                 self._filter_column,
             )
+            if filters and self._additional_filters:
+                filters[0] += self._additional_filters
 
             return pandas.read_parquet(
                 path,
@@ -1070,7 +1089,7 @@ class ParquetSource(DataframeSource):
         super()._init()
         self._dfs = []
         for path in self._paths:
-            if self._start_filter or self._end_filter:
+            if self._start_filter or self._end_filter or self._additional_filters:
                 df = self._read_filtered_parquet(path)
             else:
                 df = pandas.read_parquet(path, columns=self._columns, storage_options=self._storage_options)

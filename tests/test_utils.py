@@ -40,3 +40,6 @@ def test_find_filters():
     filters = []
     find_filters([], None, datetime.datetime.max, filters, "time")
     assert filters == [[("time", "<=", datetime.datetime.max)]]
+    filters = []
+    find_filters([], None, None, filters, None)
+    assert filters == [[]]
