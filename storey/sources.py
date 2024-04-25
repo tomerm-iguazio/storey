@@ -36,7 +36,7 @@ from nuclio_sdk import QualifiedOffset
 from .dtypes import Event, _termination_obj
 from .flow import Complete, Flow
 from .queue import SimpleAsyncQueue
-from .utils import combine_filters, find_filters, find_partitions, url_to_file_system
+from .utils import find_filters, find_partitions, url_to_file_system
 
 
 class AwaitableResult:
@@ -1039,20 +1039,21 @@ class ParquetSource(DataframeSource):
         fs, file_path = url_to_file_system(path, self._storage_options)
 
         partitions_time_attributes = find_partitions(path, fs)
-        datetime_filters = []
+        filters = []
         find_filters(
             partitions_time_attributes,
             self._start_filter,
             self._end_filter,
-            datetime_filters,
+            filters,
             self._filter_column,
         )
-        total_filters = combine_filters(datetime_filters=datetime_filters, additional_filters=self._additional_filters)
+        if filters and self._additional_filters:
+            filters[0] += self._additional_filters
         try:
             return pandas.read_parquet(
                 path,
                 columns=self._columns,
-                filters=total_filters,
+                filters=filters,
                 storage_options=self._storage_options,
             )
         except pyarrow.lib.ArrowInvalid as ex:
@@ -1066,22 +1067,21 @@ class ParquetSource(DataframeSource):
                 start_filter = self._start_filter.replace(tzinfo=pytz.utc)
                 end_filter = self._end_filter.replace(tzinfo=pytz.utc)
 
-            datetime_filters = []
+            filters = []
             find_filters(
                 partitions_time_attributes,
                 start_filter,
                 end_filter,
-                datetime_filters,
+                filters,
                 self._filter_column,
             )
-            total_filters = combine_filters(
-                datetime_filters=datetime_filters, additional_filters=self._additional_filters
-            )
+            if filters and self._additional_filters:
+                filters[0] += self._additional_filters
 
             return pandas.read_parquet(
                 path,
                 columns=self._columns,
-                filters=total_filters,
+                filters=filters,
                 storage_options=self._storage_options,
             )
 
