@@ -1,0 +1,29 @@
+name: Dev Changes Workflow
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  test:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: refs/pull/${{ github.event.number }}/merge
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+          cache: pip
+      - name: Install dependencies
+        run: make dev-env
+      - name: Run unit tests
+        run: make coverage
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: coverage_reports/coverage.xml
