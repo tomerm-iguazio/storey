@@ -5,9 +5,11 @@ coverage:
     project:
       default:
         informational: true
+        target: 70
     patch:
       default:
         informational: true
+        target: 50
 
 comment:
   require_changes: false
