@@ -1,13 +1,14 @@
-flag_management:
-  individual_flags:
-    - name: smart-tests
-      carryforward: true
-      carryforward_mode: "labels"
-      statuses:
-        - type: "project"
-        - type: "patch"
+coverage:
+  round: down
+  precision: 2
+  status:
+    project:
+      default:
+        informational: yes
+    patch:
+      default:
+        informational: yes
 
-cli:
-  plugins:
-    pycoverage:
-      report_type: "json"
+comment:
+  require_head: true
+  layout: "header, diff, changes, files, footer"
