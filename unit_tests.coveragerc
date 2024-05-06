@@ -4,6 +4,3 @@ omit =
     */tests/*
     */integration/*
     test_*
-    *.csv
-    *.parquet
-    *.json
