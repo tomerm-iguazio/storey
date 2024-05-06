@@ -4,10 +4,10 @@ coverage:
   status:
     project:
       default:
-        informational: yes
+        informational: true
     patch:
       default:
-        informational: yes
+        informational: true
 
 comment:
   require_head: true
