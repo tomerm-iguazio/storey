@@ -444,7 +444,6 @@ def test_filter_before_after_non_partitioned(setup_teardown_test):
 def test_filter_before_after_partitioned_random(setup_teardown_test):
     low_limit = pd.Timestamp("2018-01-01")
     high_limit = pd.Timestamp("2020-12-31 23:59:59.999999")
-
     delta = high_limit - low_limit
 
     seed_value = rand.randrange(sys.maxsize)
