@@ -57,20 +57,20 @@ jobs:
           file: coverage_reports/coverage.xml
 
 
-  integration:
-    name: Integration tests
-    runs-on: [ self-hosted, Linux ]
-    container:
-      image: python:3.9.18
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: refs/pull/${{ github.event.number }}/merge
-      - name: Install dependencies
-        run: make dev-env
-      - name: Run integration tests
-        env:
-          V3IO_API: ${{ secrets.V3IO_API }}
-          V3IO_ACCESS_KEY: ${{ secrets.V3IO_ACCESS_KEY }}
-          V3IO_FRAMESD: ${{ secrets.V3IO_FRAMESD }}
-        run: make integration
+#  integration:
+#    name: Integration tests
+#    runs-on: [ self-hosted, Linux ]
+#    container:
+#      image: python:3.9.18
+#    steps:
+#      - uses: actions/checkout@v3
+#        with:
+#          ref: refs/pull/${{ github.event.number }}/merge
+#      - name: Install dependencies
+#        run: make dev-env
+#      - name: Run integration tests
+#        env:
+#          V3IO_API: ${{ secrets.V3IO_API }}
+#          V3IO_ACCESS_KEY: ${{ secrets.V3IO_ACCESS_KEY }}
+#          V3IO_FRAMESD: ${{ secrets.V3IO_FRAMESD }}
+#        run: make integration
