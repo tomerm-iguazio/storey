@@ -437,7 +437,6 @@ def test_filter_before_after_non_partitioned(setup_teardown_test):
     ).run()
     read_back_result = controller.await_termination()
     expected = [{"my_string": "hello", "my_time": pd.Timestamp("2019-01-26 14:52:37")}]
-
     assert read_back_result == expected, f"{read_back_result}\n!=\n{expected}"
 
 
