@@ -344,3 +344,18 @@ def find_filters(partitions_time_attributes, start, end, filters, filter_column)
         filters,
         filter_column,
     )
+
+
+def fibonacci_sequence(limit):
+    if limit <= 0:
+        return []
+
+    fibonacci_list = [0, 1]
+    while True:
+        next_number = fibonacci_list[-1] + fibonacci_list[-2]
+        if next_number <= limit:
+            fibonacci_list.append(next_number)
+        else:
+            break
+
+    return fibonacci_list
