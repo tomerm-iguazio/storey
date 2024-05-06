@@ -117,6 +117,7 @@ def dummy():
     result *= 3
     return result
 
+
 def dummy2():
     result = 2 + 2
     result *= 5
