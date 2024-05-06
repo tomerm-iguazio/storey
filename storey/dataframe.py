@@ -110,3 +110,9 @@ class ToDataFrame(Flow):
                 df.set_index(self._index, inplace=True)
             event.body = df
             return await self._do_downstream(event)
+
+    def dummy(self):
+        x = 1
+        x += 34
+        x = x - 3
+        return x
