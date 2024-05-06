@@ -1,0 +1,43 @@
+# Codecov configuration file with informational setting for unrestricted merge
+
+# Notify settings ensure that CI must pass for notifications to be sent
+codecov:
+  notify:
+    require_ci_to_pass: yes
+
+  # Coverage settings
+  coverage:
+    # Set coverage precision to 2 decimal places
+    precision: 2
+
+    # Round coverage down to the nearest whole number
+    round: down
+
+    # Define the acceptable coverage range from 70% to 100%
+    range: "70...100"
+
+    # Project status settings
+    status:
+      project:
+        default:
+          # Enable informational setting to remove merge blocking limits
+          informational: yes
+
+          # Additional settings for PR comments
+          comment:
+            # Include coverage change in the PR comment
+            layout: "header, diff, changes, files, footer"
+
+            # Set the comment title
+            title: "Code Coverage Report"
+
+            # Set the comment's footer text
+            footer: "Powered by Codecov. Learn more at https://docs.codecov.com."
+
+            # Include coverage badge in the PR comment
+            badges: "svg"
+
+      patch:
+        default:
+          # Show patch status in PR comment
+          informational: yes
