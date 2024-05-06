@@ -56,6 +56,15 @@ test:
 	find tests -name '*.pyc' -exec rm {} \;
 	python -m pytest --ignore=integration -rf -v .
 
+.PHONY: coverage
+coverage:
+	find storey -name '*.pyc' -exec rm {} \;
+	find tests -name '*.pyc' -exec rm {} \;
+	rm -rf coverage_reports;
+	coverage run --rcfile=unit_tests.coveragerc -m pytest --ignore=integration -rf -v;
+	coverage report
+	coverage xml -o coverage_reports/coverage.xml
+
 .PHONY: bench
 bench:
 	find bench -name '*.pyc' -exec rm {} \;
