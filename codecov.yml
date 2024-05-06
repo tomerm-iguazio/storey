@@ -14,3 +14,5 @@ coverage:
 comment:
   require_changes: false
   layout: "header, diff, changes, files, footer"
+  behavior: new
+  require_head: true
