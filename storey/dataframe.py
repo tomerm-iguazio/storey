@@ -116,3 +116,8 @@ def dummy():
     result = 1 + 1
     result *= 3
     return result
+
+def dummy2():
+    result = 2 + 2
+    result *= 5
+    return result
