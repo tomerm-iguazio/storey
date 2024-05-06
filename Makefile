@@ -62,6 +62,7 @@ coverage:
 	find tests -name '*.pyc' -exec rm {} \;
 	coverage run --rcfile=unit_tests.coveragerc -m pytest --ignore=integration -rf -v;
 	coverage report
+	coverage xml -o coverage_reports/coverage.xml
 
 .PHONY: bench
 bench:
