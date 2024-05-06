@@ -455,7 +455,6 @@ def test_filter_before_after_partitioned_random(setup_teardown_test):
     middle_limit = low_limit + datetime.timedelta(seconds=random_second)
 
     print("middle_limit is " + str(middle_limit))
-
     number_below_middle_limit = rand.randrange(0, 10)
 
     def create_rand_data(num_elements, low_limit, high_limit, char):
