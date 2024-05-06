@@ -527,6 +527,7 @@ def test_filter_before_after_partitioned_random(setup_teardown_test):
     ).run()
     read_back_result = controller.await_termination()
     print("expecting " + str(number_below_middle_limit) + " to be below middle limit")
+    print()
     assert (len(read_back_result)) == number_below_middle_limit
 
 
