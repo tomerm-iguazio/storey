@@ -10,5 +10,5 @@ coverage:
         informational: true
 
 comment:
-  require_head: true
+  require_changes: false
   layout: "header, diff, changes, files, footer"
