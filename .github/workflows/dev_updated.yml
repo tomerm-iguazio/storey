@@ -24,8 +24,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with:
-          ref: refs/pull/${{ github.event.number }}/merge
+      - name: Switch to development branch
+        run: git checkout development
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
