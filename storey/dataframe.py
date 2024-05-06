@@ -110,3 +110,10 @@ class ToDataFrame(Flow):
                 df.set_index(self._index, inplace=True)
             event.body = df
             return await self._do_downstream(event)
+
+
+def calculate():
+    x = 3 + 3
+    y = 4 * 4
+    z = 5 * 5
+    return x * y * z
