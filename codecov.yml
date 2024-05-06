@@ -5,10 +5,14 @@ coverage:
     project:
       default:
         informational: true
+        target: 70
     patch:
       default:
         informational: true
+        target: 50
 
 comment:
   require_changes: false
   layout: "header, diff, changes, files, footer"
+  behavior: new
+  require_head: true
