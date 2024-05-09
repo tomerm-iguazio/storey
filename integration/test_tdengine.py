@@ -2,6 +2,7 @@ import os
 from datetime import datetime
 
 import pytest
+import pytz
 import taosrest
 from taosrest import ConnectError
 from taosws import QueryError
@@ -60,8 +61,9 @@ def tdengine():
     connection.close()
 
 
+@pytest.mark.parametrize("dynamic_table", [None, "$key", "table"])
 @pytest.mark.skipif(not has_tdengine_credentials, reason="Missing TDEngine URL, user, and/or password")
-def test_tdengine_target(tdengine):
+def test_tdengine_target(tdengine, dynamic_table):
     connection, url, user, password, db_name, table_name, db_prefix = tdengine
     time_format = "%d/%m/%y %H:%M:%S UTC%z"
     controller = build_flow(
@@ -72,7 +74,8 @@ def test_tdengine_target(tdengine):
                 user=user,
                 password=password,
                 database=db_name,
-                table=table_name,
+                table=None if dynamic_table else table_name,
+                dynamic_table=dynamic_table,
                 time_col="time",
                 columns=["my_int", "my_string"],
                 time_format=time_format,
@@ -84,33 +87,43 @@ def test_tdengine_target(tdengine):
     date_time_str = "18/09/19 01:55:1"
     for i in range(9):
         timestamp = f"{date_time_str}{i} UTC-0000"
-        controller.emit({"time": timestamp, "my_int": i, "my_string": f"hello{i}"})
+        event_body = {"time": timestamp, "my_int": i, "my_string": f"hello{i}"}
+        event_key = None
+        if dynamic_table == "$key":
+            event_key = table_name
+        elif dynamic_table:
+            event_body[dynamic_table] = table_name
+        controller.emit(event_body, event_key)
 
     controller.terminate()
     controller.await_termination()
 
     result = connection.query(f"SELECT * FROM {db_prefix}{table_name};")
-    if url.startswith("taosws"):
-        result_list = []
-        for row in result:
-            row = list(row)
-            for field_index, field in enumerate(result.fields):
-                if field.type() == "TIMESTAMP":
+    result_list = []
+    for row in result:
+        row = list(row)
+        for field_index, field in enumerate(result.fields):
+            typ = field.type() if url.startswith("taosws") else field["type"]
+            if typ == "TIMESTAMP":
+                if url.startswith("taosws"):
                     t = datetime.fromisoformat(row[field_index])
-                    # REST API returns a naive timestamp, but websocket returns a timestamp with a time zone
-                    t = t.replace(tzinfo=None)
+                    # websocket returns a timestamp with the local time zone
+                    t = t.astimezone(pytz.UTC).replace(tzinfo=None)
                     row[field_index] = t
-            result_list.append(row)
-    else:
-        result_list = result.data
+                else:
+                    t = row[field_index]
+                    # REST API returns a naive timestamp matching the local time zone
+                    t = t.astimezone(pytz.UTC).replace(tzinfo=None)
+                    row[field_index] = t
+        result_list.append(row)
     assert result_list == [
-        [datetime(2019, 9, 18, 9, 55, 10), 0, "hello0"],
-        [datetime(2019, 9, 18, 9, 55, 11), 1, "hello1"],
-        [datetime(2019, 9, 18, 9, 55, 12), 2, "hello2"],
-        [datetime(2019, 9, 18, 9, 55, 13), 3, "hello3"],
-        [datetime(2019, 9, 18, 9, 55, 14), 4, "hello4"],
-        [datetime(2019, 9, 18, 9, 55, 15), 5, "hello5"],
-        [datetime(2019, 9, 18, 9, 55, 16), 6, "hello6"],
-        [datetime(2019, 9, 18, 9, 55, 17), 7, "hello7"],
-        [datetime(2019, 9, 18, 9, 55, 18), 8, "hello8"],
+        [datetime(2019, 9, 18, 1, 55, 10), 0, "hello0"],
+        [datetime(2019, 9, 18, 1, 55, 11), 1, "hello1"],
+        [datetime(2019, 9, 18, 1, 55, 12), 2, "hello2"],
+        [datetime(2019, 9, 18, 1, 55, 13), 3, "hello3"],
+        [datetime(2019, 9, 18, 1, 55, 14), 4, "hello4"],
+        [datetime(2019, 9, 18, 1, 55, 15), 5, "hello5"],
+        [datetime(2019, 9, 18, 1, 55, 16), 6, "hello6"],
+        [datetime(2019, 9, 18, 1, 55, 17), 7, "hello7"],
+        [datetime(2019, 9, 18, 1, 55, 18), 8, "hello8"],
     ]
