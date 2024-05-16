@@ -3,3 +3,4 @@
 venv
 .coverage
 coverage_reports
+tests/env.yml
