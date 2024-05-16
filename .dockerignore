@@ -1,1 +1,3 @@
 venv
+.coverage
+coverage_reports

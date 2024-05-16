@@ -90,3 +90,12 @@ set-version:
 docs: # Build html docs
 	rm -f docs/external/*.md
 	cd docs && make html
+
+.PHONY: coverage
+coverage:
+	find storey -name '*.pyc' -exec rm {} \;
+	find tests -name '*.pyc' -exec rm {} \;
+	rm -rf coverage_reports;
+	coverage run --rcfile=unit_tests.coveragerc -m pytest --ignore=integration -rf -v;
+	coverage report
+	coverage xml -o coverage_reports/coverage.xml
