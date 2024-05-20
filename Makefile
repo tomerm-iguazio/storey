@@ -96,6 +96,39 @@ coverage:
 	find storey -name '*.pyc' -exec rm {} \;
 	find tests -name '*.pyc' -exec rm {} \;
 	rm -rf coverage_reports;
-	coverage run --rcfile=unit_tests.coveragerc -m pytest --ignore=integration -rf -v;
+	rm -f unit_tests.coverage
+	COVERAGE_FILE=unit_tests.coverage coverage run --rcfile=unit_tests.coveragerc -m pytest --ignore=integration -rf -v;
 	coverage report
-	coverage xml -o coverage_reports/coverage.xml
+	coverage xml -o coverage_reports/coverage_unit_tests.xml
+
+
+.PHONY: full-coverage-unit-tests
+full-coverage-unit-tests:
+	find storey -name '*.pyc' -exec rm {} \;
+	find tests -name '*.pyc' -exec rm {} \;
+	rm -rf coverage_reports;
+	rm -f full_unit_tests.coverage;
+	COVERAGE_FILE=full_unit_tests.coverage coverage run --rcfile=integration_tests.coveragerc -m pytest --ignore=integration -rf -v;
+	echo "coverage unit test report without excluding integration files:";
+	COVERAGE_FILE=full_unit_tests.coverage coverage report;
+
+.PHONY: coverage-integration
+coverage-integration:
+	find storey -name '*.pyc' -exec rm {} \;
+	find tests -name '*.pyc' -exec rm {} \;
+	find integration -name '*.pyc' -exec rm {} \;
+	rm -rf coverage_reports;
+	rm -f integration.coverage;
+	COVERAGE_FILE=integration.coverage coverage run --rcfile=integration_tests.coveragerc -m pytest -rf -v integration;
+	#COVERAGE_FILE=integration.coverage coverage run --rcfile=integration_tests.coveragerc -m pytest -v integration/test_flow_integration.py || echo "tests failed, continue"
+	echo "coverage integration report:";
+	COVERAGE_FILE=integration.coverage coverage report;
+
+.PHONY: coverage-full
+coverage-full:
+	make full-coverage-unit-tests;
+	make coverage-integration;
+	rm -f combined.coverage;
+	COVERAGE_FILE=combined.coverage coverage combine full_unit_tests.coverage integration.coverage;
+	echo "coverage full report:";
+	COVERAGE_FILE=combined.coverage coverage report;
