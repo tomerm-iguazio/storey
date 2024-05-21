@@ -65,6 +65,9 @@ jobs:
           name: coverage-report
           path: full_unit_tests.coverage
 
+      - name: Display sizes
+        run:  ls -lh |grep coverage
+
       - name: Display coverage report
         run: COVERAGE_FILE=full_unit_tests.coverage coverage report
 
