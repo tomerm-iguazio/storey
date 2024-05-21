@@ -54,7 +54,6 @@ jobs:
     name: Full coverage
     runs-on: ubuntu-latest
     needs: [test, integration]
-    #needs: [test]
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
