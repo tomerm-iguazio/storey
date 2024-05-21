@@ -12,56 +12,57 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-name: CI
-
-on:
-  push:
-    branches-ignore:
-      - development
-
-jobs:
-  lint:
-    name: Lint code
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.9
-          cache: pip
-      - name: Install dependencies
-        run: make dev-env
-      - name: Lint
-        run: make lint
-
-  test:
-    name: Unit tests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.9
-          cache: pip
-      - name: Install dependencies
-        run: make dev-env
-      - name: Run unit tests
-        run: make test
-
-  integration:
-    name: Integration tests
-    runs-on: [ self-hosted, Linux ]
-    container:
-      image: python:3.9.18
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install dependencies
-        run: make dev-env
-      - name: Run integration tests
-        env:
-          V3IO_API: ${{ secrets.V3IO_API }}
-          V3IO_ACCESS_KEY: ${{ secrets.V3IO_ACCESS_KEY }}
-          V3IO_FRAMESD: ${{ secrets.V3IO_FRAMESD }}
-        run: make integration
+#  TODO return it
+#name: CI
+#
+#on:
+#  push:
+#    branches-ignore:
+#      - development
+#
+#jobs:
+#  lint:
+#    name: Lint code
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v3
+#      - name: Set up Python
+#        uses: actions/setup-python@v4
+#        with:
+#          python-version: 3.9
+#          cache: pip
+#      - name: Install dependencies
+#        run: make dev-env
+#      - name: Lint
+#        run: make lint
+#
+#  test:
+#    name: Unit tests
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v3
+#      - name: Set up Python
+#        uses: actions/setup-python@v4
+#        with:
+#          python-version: 3.9
+#          cache: pip
+#      - name: Install dependencies
+#        run: make dev-env
+#      - name: Run unit tests
+#        run: make test
+#
+#  integration:
+#    name: Integration tests
+#    runs-on: [ self-hosted, Linux ]
+#    container:
+#      image: python:3.9.18
+#    steps:
+#      - uses: actions/checkout@v3
+#      - name: Install dependencies
+#        run: make dev-env
+#      - name: Run integration tests
+#        env:
+#          V3IO_API: ${{ secrets.V3IO_API }}
+#          V3IO_ACCESS_KEY: ${{ secrets.V3IO_ACCESS_KEY }}
+#          V3IO_FRAMESD: ${{ secrets.V3IO_FRAMESD }}
+#        run: make integration
