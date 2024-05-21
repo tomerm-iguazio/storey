@@ -44,7 +44,7 @@ jobs:
 #          V3IO_FRAMESD: ${{ secrets.V3IO_FRAMESD }}
 #        run: make coverage-integration
 
-  full coverage:
+  full_coverage:
     name: Full coverage
     runs-on: ubuntu-latest
     needs: integration
