@@ -26,7 +26,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: coverage-report
-          path: full_unit_tests.coverage;
+          path: full_unit_tests.coverage
 
 #  integration:
 #    name: Integration tests
@@ -66,5 +66,5 @@ jobs:
           path: full_unit_tests.coverage
 
       - name: Display coverage report
-        run: COVERAGE_FILE=full_unit_tests.coverage coverage report;
+        run: COVERAGE_FILE=full_unit_tests.coverage coverage report
 
