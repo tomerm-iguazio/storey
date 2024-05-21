@@ -3,7 +3,8 @@ name: Dev Changes Workflow
 on:
   push:
     branches:
-      - development
+#      - development #TODO return it
+      - local-coverage
 
 jobs:
   test:
