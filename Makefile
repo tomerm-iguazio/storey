@@ -106,6 +106,7 @@ coverage:
 full-coverage-unit-tests:
 	find storey -name '*.pyc' -exec rm {} \;
 	find tests -name '*.pyc' -exec rm {} \;
+	find integration -name '*.pyc' -exec rm {} \;
 	rm -rf coverage_reports;
 	rm -f full_unit_tests.coverage;
 	COVERAGE_FILE=full_unit_tests.coverage coverage run --rcfile=integration_tests.coveragerc -m pytest --ignore=integration -rf -v;
