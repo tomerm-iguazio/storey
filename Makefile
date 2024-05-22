@@ -129,6 +129,9 @@ coverage-integration:
 .PHONY: coverage-combine
 coverage-combine:
 	rm -f combined.coverage;
+	find storey -name '*.pyc' -exec rm {} \;
+	find tests -name '*.pyc' -exec rm {} \;
+	find integration -name '*.pyc' -exec rm {} \;
 	COVERAGE_FILE=combined.coverage coverage combine full_unit_tests.coverage integration.coverage;
 	echo "coverage full report:";
 	COVERAGE_FILE=combined.coverage coverage report;
