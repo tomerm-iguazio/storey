@@ -3,4 +3,3 @@
 omit =
     */tests/*
     test_*
-    */integration/__init__.py

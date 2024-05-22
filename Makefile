@@ -124,7 +124,7 @@ coverage-integration:
 	COVERAGE_FILE=integration.coverage coverage run --rcfile=integration_tests.coveragerc -m pytest -rf -v integration || echo "tests failed, continue" #  just for fork run, TODO delete.
 	#COVERAGE_FILE=integration.coverage coverage run --rcfile=integration_tests.coveragerc -m pytest -v integration/test_flow_integration.py || echo "tests failed, continue"
 	echo "coverage integration report:";
-	COVERAGE_FILE=integration.coverage coverage report;
+	COVERAGE_FILE=integration.coverage coverage report -i;
 
 
 .PHONY: coverage-combine
