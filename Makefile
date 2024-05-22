@@ -121,8 +121,8 @@ coverage-integration:
 	rm -rf coverage_reports;
 	rm -f integration.coverage;
 	#COVERAGE_FILE=integration.coverage coverage run --rcfile=integration_tests.coveragerc -m pytest -rf -v integration
-	COVERAGE_FILE=integration.coverage coverage run --rcfile=integration_tests.coveragerc -m pytest -rf -v integration || echo "tests failed, continue" #  just for fork run, TODO delete.
-	#COVERAGE_FILE=integration.coverage coverage run --rcfile=integration_tests.coveragerc -m pytest -v integration/test_flow_integration.py || echo "tests failed, continue"
+	#COVERAGE_FILE=integration.coverage coverage run --rcfile=integration_tests.coveragerc -m pytest -rf -v integration || echo "tests failed, continue" #  just for fork run, TODO delete.
+	COVERAGE_FILE=integration.coverage coverage run --rcfile=integration_tests.coveragerc -m pytest -v integration/test_flow_integration.py || "tests failed, continue" #  just for fork run, TODO delete.
 	echo "coverage integration report:";
 	COVERAGE_FILE=integration.coverage coverage report -i;
 
