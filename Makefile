@@ -120,6 +120,7 @@ coverage-integration:
 	find integration -name '*.pyc' -exec rm {} \;
 	rm -rf coverage_reports;
 	rm -f integration.coverage;
+	cd storey
 	#COVERAGE_FILE=integration.coverage coverage run --rcfile=integration_tests.coveragerc -m pytest -rf -v integration
 	#COVERAGE_FILE=integration.coverage coverage run --rcfile=integration_tests.coveragerc -m pytest -rf -v integration || echo "tests failed, continue" #  just for fork run, TODO delete.
 	COVERAGE_FILE=integration.coverage coverage run --rcfile=integration_tests.coveragerc -m pytest -v integration/test_flow_integration.py || "tests failed, continue" #  just for fork run, TODO delete.
