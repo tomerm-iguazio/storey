@@ -3,3 +3,4 @@
 omit =
     */tests/*
     test_*
+    *storey/integration/__init__.py
