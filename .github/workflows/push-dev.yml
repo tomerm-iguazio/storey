@@ -35,6 +35,10 @@ jobs:
     container:
       image: python:3.9.18
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          path: /
       - uses: actions/checkout@v3
       - name: Install dependencies
         run: make dev-env
