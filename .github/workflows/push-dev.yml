@@ -34,17 +34,14 @@ jobs:
     runs-on: [ self-hosted, Linux ]
     container:
       image: python:3.9.18
-#      working-directory: /
     defaults:
       run:
         working-directory: /  # Set the working directory to /
     steps:
       - name: pwd
         run: pwd
-      - name: Checkout /
-        run: cd /
-      - name: pwd2
-        run: pwd
+      - name: ls
+        run: ls -lh
       - uses: actions/checkout@v3
       - name: Install dependencies
         run: make dev-env
