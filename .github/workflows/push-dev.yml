@@ -42,6 +42,8 @@ jobs:
         run: pwd
       - name: ls
         run: ls -lh
+      - name: ls __w
+        run: ls -lh __w
       - uses: actions/checkout@v3
       - name: Install dependencies
         run: make dev-env
