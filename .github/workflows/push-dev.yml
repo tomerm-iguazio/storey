@@ -34,9 +34,10 @@ jobs:
     runs-on: [ self-hosted, Linux ]
     container:
       image: python:3.9.18
-    defaults:
-      run:
-        working-directory: /  # Set the working directory to /
+      workingDirectory: "/",
+#    defaults:
+#      run:
+#        working-directory: /  # Set the working directory to /
     steps:
       - name: pwd
         run: pwd
