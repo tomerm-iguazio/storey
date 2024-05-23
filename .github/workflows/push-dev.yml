@@ -34,7 +34,7 @@ jobs:
     runs-on: [ self-hosted, Linux ]
     container:
       image: python:3.9.18
-      workingDirectory: /
+      working-directory: /
 #    defaults:
 #      run:
 #        working-directory: /  # Set the working directory to /
