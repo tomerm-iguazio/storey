@@ -38,16 +38,21 @@ jobs:
     runs-on: [ self-hosted, Linux ]
     container:
       image: python:3.9.18
-#    defaults:
-#      run:
-#        working-directory: /  # Set the working directory to /
+    defaults:
+      run:
+        working-directory: /home/runner/work/storey/storey  # Set the working directory to /
     steps:
+      - name: mkdir
+        run: mkdir -p /home/runner/work/storey/storey
+      - name: cp
+        run: cp -r /__w/storey/storey /home/runner/work/storey/storey
       - name: pwd
         run: pwd
       - name: ls
         run: ls -lh
       - name: ls __w
         run: ls -lh .
+
       - uses: actions/checkout@v3
       - name: Install dependencies
         run: make dev-env
