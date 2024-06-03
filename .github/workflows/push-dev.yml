@@ -72,10 +72,9 @@ jobs:
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v2
-        working-directory: /home/runner/work/storey/storey
         with:
           name: coverage_integration_report
-          path: integration.coverage
+          path: /home/runner/work/storey/storey/integration.coverage
 
   full_coverage:
     name: Full coverage
