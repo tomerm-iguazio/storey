@@ -62,6 +62,9 @@ jobs:
       - name: ls 3
         run: ls -lh
         working-directory: /home/runner/work/storey
+      - name: ls 4
+        run: ls -lh
+        working-directory: /home/runner/work/storey/storey/storey
 
       - uses: actions/checkout@v3
       - name: Install dependencies
