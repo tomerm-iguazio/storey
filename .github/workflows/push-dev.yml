@@ -77,6 +77,10 @@ jobs:
           cache: pip
       - name: Install dependencies
         run: make dev-env
+      - name: pwd
+        run: pwd
+      - name: ls
+        run: ls -lh
 
       - name: Download unit tests coverage report
         uses: actions/download-artifact@v2
