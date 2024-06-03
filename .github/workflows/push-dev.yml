@@ -17,6 +17,8 @@ jobs:
         with:
           python-version: 3.9
           cache: pip
+      - name: pwd
+        run: pwd
       - name: Install dependencies
         run: make dev-env
 
