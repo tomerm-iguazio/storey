@@ -19,6 +19,8 @@ jobs:
           cache: pip
       - name: pwd
         run: pwd
+      - name: ls
+        run: ls -lh
       - name: Install dependencies
         run: make dev-env
 
