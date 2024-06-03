@@ -45,7 +45,7 @@ jobs:
       - name: mkdir
         run: mkdir -p /home/runner/work/storey/storey
       - name: cp
-        run: cp -r /__w/storey /home/runner/work/storey/storey
+        run: mv /__w/storey/storey /home/runner/work/storey/storey
 #      - name: Setup Symfony
 #        uses: actions/checkout@v1
 #        working-directory: /home/runner/work/storey/storey
