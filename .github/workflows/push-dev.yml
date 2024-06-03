@@ -42,8 +42,8 @@ jobs:
 #      run:
 #        working-directory: /  # Set the working directory to /
     steps:
-      - name: mkdir
-        run: mkdir -p /home/runner/work/storey/storey
+#      - name: mkdir
+#        run: mkdir -p /home/runner/work/storey/storey
       - name: mv
         run: ln -s /__w/storey/storey /home/runner/work/storey/storey
 #      - name: Setup Symfony
