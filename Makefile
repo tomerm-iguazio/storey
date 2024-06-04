@@ -110,7 +110,6 @@ full-coverage-unit-tests:
 	rm -rf coverage_reports;
 	rm -f full_unit_tests.coverage;
 	COVERAGE_FILE=full_unit_tests.coverage coverage run --rcfile=integration_tests.coveragerc --source=. -m pytest --ignore=integration -rf -v;
-	#COVERAGE_FILE=full_unit_tests.coverage coverage run --rcfile=integration_tests.coveragerc --source=. -m pytest --ignore=integration -rf -v tests/test_aggregate_by_key.py::test_sliding_window_simple_aggregation_flow;
 	echo "coverage unit test report without excluding integration files:";
 	COVERAGE_FILE=full_unit_tests.coverage coverage report --rcfile=integration_tests.coveragerc;
 
