@@ -3,7 +3,8 @@ name: Dev Changes
 on:
   push:
     branches:
-      - development
+      # TODO return - development
+      - local-coverage
 
 jobs:
   test:
@@ -27,7 +28,7 @@ jobs:
         run: make full-coverage-unit-tests
 
       - name: Upload coverage report
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: coverage_unit_tests_report
           path: full_unit_tests.coverage
@@ -50,7 +51,7 @@ jobs:
         run: make coverage-integration
 
       - name: Upload coverage report
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: coverage_integration_report
           path: integration.coverage
@@ -69,13 +70,13 @@ jobs:
       - name: Install dependencies
         run: make dev-env
       - name: Download unit tests coverage report
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: coverage_unit_tests_report
           path: . # where to download. file downloaded by name.
 
       - name: Download integration coverage report
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: coverage_integration_report
           path: . # where to download. file downloaded by name.
