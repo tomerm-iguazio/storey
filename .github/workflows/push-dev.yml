@@ -3,8 +3,7 @@ name: Dev Changes
 on:
   push:
     branches:
-      # TODO return - development
-      - local-coverage
+      - development
 
 jobs:
   test:
