@@ -44,8 +44,8 @@ jobs:
     steps:
       - name: mkdir
         run: mkdir -p /home/runner/work/storey
-      - name: cp
-        run: cp -a /__w/storey/storey /home/runner/work/storey/storey
+#      - name: cp
+#        run: cp -a /__w/storey/storey /home/runner/work/storey/storey
 #      - uses: actions/checkout@v2
 #      - name: Create symbolic link
 #        run: |
@@ -60,35 +60,35 @@ jobs:
         run: pwd
       - name: pwd 2
         run: pwd
-        working-directory: /home/runner/work/storey/storey
+        #working-directory: /home/runner/work/storey/storey
       - name: ls
         run: ls -lh
       - name: ls 2
         run: ls -lh
-        working-directory: /home/runner/work/storey/storey
+        #working-directory: /home/runner/work/storey/storey
       - name: ls 3
         run: ls -lh
-        working-directory: /home/runner/work/storey
+        #working-directory: /home/runner/work/storey
       - name: ls 4
         run: ls -lh
-        working-directory: /home/runner/work/storey/storey/storey
+        #working-directory: /home/runner/work/storey/storey/storey
       - uses: actions/checkout@v3
       - name: Install dependencies
         run: make dev-env
-        working-directory: /home/runner/work/storey/storey
+        #working-directory: /home/runner/work/storey/storey
       - name: Run integration tests
         env:
           V3IO_API: ${{ secrets.V3IO_API }}
           V3IO_ACCESS_KEY: ${{ secrets.V3IO_ACCESS_KEY }}
           V3IO_FRAMESD: ${{ secrets.V3IO_FRAMESD }}
         run: make coverage-integration
-        working-directory: /home/runner/work/storey/storey
+        #working-directory: /home/runner/work/storey/storey
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v2
         with:
           name: coverage_integration_report
-          path: /home/runner/work/storey/storey/integration.coverage
+          path: integration.coverage
 
   full_coverage:
     name: Full coverage

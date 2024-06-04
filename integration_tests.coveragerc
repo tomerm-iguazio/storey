@@ -3,3 +3,7 @@
 omit =
     */tests/*
     test_*
+
+source =
+    /__w/storey/storey
+    /home/runner/work/storey/storey
