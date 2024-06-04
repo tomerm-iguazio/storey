@@ -137,7 +137,7 @@ coverage-combine:
 	find integration -name '*.pyc' -exec rm {} \;
 	COVERAGE_FILE=combined.coverage coverage combine --rcfile=integration_tests.coveragerc --keep integration.coverage full_unit_tests.coverage;
 	echo "coverage full report:";
-	COVERAGE_FILE=combined.coverage coverage report -i;
+	COVERAGE_FILE=combined.coverage coverage report --rcfile=integration_tests.coveragerc -i;
 
 .PHONY: full-coverage
 full-coverage:
