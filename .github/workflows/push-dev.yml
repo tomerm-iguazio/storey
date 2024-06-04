@@ -69,11 +69,6 @@ jobs:
           cache: pip
       - name: Install dependencies
         run: make dev-env
-      - name: pwd
-        run: pwd
-      - name: ls
-        run: ls -lh
-
       - name: Download unit tests coverage report
         uses: actions/download-artifact@v2
         with:
@@ -85,9 +80,6 @@ jobs:
         with:
           name: coverage_integration_report
           path: . # where to download. file downloaded by name.
-
-      - name: Display sizes
-        run:  ls -lh |grep coverage
 
       - name: combine coverage
         run: make coverage-combine
