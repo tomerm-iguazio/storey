@@ -112,7 +112,7 @@ full-coverage-unit-tests:
 	#TODO return COVERAGE_FILE=full_unit_tests.coverage coverage run --rcfile=integration_tests.coveragerc --source=. -m pytest --ignore=integration -rf -v;
 	COVERAGE_FILE=full_unit_tests.coverage coverage run --rcfile=integration_tests.coveragerc --source=. -m pytest --ignore=integration -rf -v tests/test_aggregate_by_key.py::test_sliding_window_simple_aggregation_flow;
 	echo "coverage unit test report without excluding integration files:";
-	COVERAGE_FILE=full_unit_tests.coverage coverage report;
+	COVERAGE_FILE=full_unit_tests.coverage coverage report --rcfile=integration_tests.coveragerc;
 
 .PHONY: coverage-integration
 coverage-integration:
@@ -126,7 +126,7 @@ coverage-integration:
 	#COVERAGE_FILE=integration.coverage coverage run --rcfile=integration_tests.coveragerc  -m pytest -rf -v integration || echo "tests failed, continue" #  just for fork run, TODO delete.
 	COVERAGE_FILE=integration.coverage coverage run --rcfile=integration_tests.coveragerc --source=. -m pytest -v integration/test_flow_integration.py::test_join_with_http || echo "tests failed, continue" #  just for fork run, TODO delete.
 	echo "coverage integration report:";
-	COVERAGE_FILE=integration.coverage coverage report;
+	COVERAGE_FILE=integration.coverage coverage report --rcfile=integration_tests.coveragerc;
 
 
 .PHONY: coverage-combine
@@ -135,7 +135,7 @@ coverage-combine:
 	find storey -name '*.pyc' -exec rm {} \;
 	find tests -name '*.pyc' -exec rm {} \;
 	find integration -name '*.pyc' -exec rm {} \;
-	COVERAGE_FILE=combined.coverage coverage combine --rcfile=integration_tests.coveragerc --keep integration.coverage full_unit_tests.coverage;
+	COVERAGE_FILE=combined.coverage coverage combine --keep integration.coverage full_unit_tests.coverage;
 	echo "coverage full report:";
 	COVERAGE_FILE=combined.coverage coverage report --rcfile=integration_tests.coveragerc -i;
 
