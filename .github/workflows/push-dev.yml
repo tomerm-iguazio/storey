@@ -38,14 +38,17 @@ jobs:
     runs-on: [ self-hosted, Linux ]
     container:
       image: python:3.9.18
-#    defaults:
-#      run:
-#        working-directory: /  # Set the working directory to /
+    defaults:
+      run:
+        working-directory: /  # Set the working directory to /
     steps:
       - name: mkdir
         run: mkdir -p /home/runner/work/storey
-      - name: mv
-        run: mv /__w/storey/storey /home/runner/work/storey/storey
+      - uses: actions/checkout@v2
+        with:
+          path: '/home/runner/work/storey/storey'
+#      - name: mv
+#        run: mv /__w/storey/storey /home/runner/work/storey/storey
 #      - name: Setup Symfony
 #        uses: actions/checkout@v1
 #        working-directory: /home/runner/work/storey/storey
