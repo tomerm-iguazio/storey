@@ -72,10 +72,10 @@ jobs:
       - name: ls 4
         run: ls -lh
         working-directory: /home/runner/work/storey/storey/storey
-
       - uses: actions/checkout@v3
       - name: Install dependencies
         run: make dev-env
+        working-directory: /home/runner/work/storey/storey
       - name: Run integration tests
         env:
           V3IO_API: ${{ secrets.V3IO_API }}
