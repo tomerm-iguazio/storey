@@ -135,7 +135,7 @@ coverage-combine:
 	find storey -name '*.pyc' -exec rm {} \;
 	find tests -name '*.pyc' -exec rm {} \;
 	find integration -name '*.pyc' -exec rm {} \;
-	COVERAGE_FILE=combined.coverage --rcfile=integration_tests.coveragerc coverage combine --rcfile=integration_tests.coveragerc --keep integration.coverage full_unit_tests.coverage;
+	COVERAGE_FILE=combined.coverage coverage combine --rcfile=integration_tests.coveragerc --keep integration.coverage full_unit_tests.coverage;
 	echo "coverage full report:";
 	COVERAGE_FILE=combined.coverage coverage report -i;
 
