@@ -38,51 +38,17 @@ jobs:
     runs-on: [ self-hosted, Linux ]
     container:
       image: python:3.9.18
-#    defaults:
-#      run:
-#        working-directory: /  # Set the working directory to /
     steps:
-      - name: mkdir
-        run: mkdir -p /home/runner/work/storey
-#      - name: cp
-#        run: cp -a /__w/storey/storey /home/runner/work/storey/storey
-#      - uses: actions/checkout@v2
-#      - name: Create symbolic link
-#        run: |
-#          mkdir -p /home/runner/work/storey
-#          ln /__w/storey/storey /home/runner/work/storey/storey
-#      - name: mv
-#        run: mv /__w/storey/storey /home/runner/work/storey/storey
-#      - name: Setup Symfony
-#        uses: actions/checkout@v1
-#        working-directory: /home/runner/work/storey/storey
-      - name: pwd
-        run: pwd
-      - name: pwd 2
-        run: pwd
-        #working-directory: /home/runner/work/storey/storey
-      - name: ls
-        run: ls -lh
-      - name: ls 2
-        run: ls -lh
-        #working-directory: /home/runner/work/storey/storey
-      - name: ls 3
-        run: ls -lh
-        #working-directory: /home/runner/work/storey
-      - name: ls 4
-        run: ls -lh
-        #working-directory: /home/runner/work/storey/storey/storey
       - uses: actions/checkout@v3
       - name: Install dependencies
         run: make dev-env
-        #working-directory: /home/runner/work/storey/storey
+
       - name: Run integration tests
         env:
           V3IO_API: ${{ secrets.V3IO_API }}
           V3IO_ACCESS_KEY: ${{ secrets.V3IO_ACCESS_KEY }}
           V3IO_FRAMESD: ${{ secrets.V3IO_FRAMESD }}
         run: make coverage-integration
-        #working-directory: /home/runner/work/storey/storey
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v2
