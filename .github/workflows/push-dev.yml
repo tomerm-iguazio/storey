@@ -45,8 +45,10 @@ jobs:
       - name: mkdir
         run: mkdir -p /home/runner/work/storey
       - uses: actions/checkout@v2
-        with:
-          path: '/home/runner/work/storey/storey'
+                - name: Create symbolic link
+                run: |
+                  mkdir -p /home/runner/work/storey
+                  ln -s /__w/storey/storey /home/runner/work/storey/storey
 #      - name: mv
 #        run: mv /__w/storey/storey /home/runner/work/storey/storey
 #      - name: Setup Symfony
