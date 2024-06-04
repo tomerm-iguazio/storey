@@ -109,8 +109,8 @@ full-coverage-unit-tests:
 	find integration -name '*.pyc' -exec rm {} \;
 	rm -rf coverage_reports;
 	rm -f full_unit_tests.coverage;
-	#COVERAGE_FILE=full_unit_tests.coverage coverage run --rcfile=integration_tests.coveragerc --source=. -m pytest --ignore=integration -rf -v;
-	COVERAGE_FILE=full_unit_tests.coverage coverage run --rcfile=integration_tests.coveragerc --source=. -m pytest --ignore=integration -rf -v tests/test_aggregate_by_key.py::test_sliding_window_simple_aggregation_flow;
+	COVERAGE_FILE=full_unit_tests.coverage coverage run --rcfile=integration_tests.coveragerc --source=. -m pytest --ignore=integration -rf -v;
+	#COVERAGE_FILE=full_unit_tests.coverage coverage run --rcfile=integration_tests.coveragerc --source=. -m pytest --ignore=integration -rf -v tests/test_aggregate_by_key.py::test_sliding_window_simple_aggregation_flow;
 	echo "coverage unit test report without excluding integration files:";
 	COVERAGE_FILE=full_unit_tests.coverage coverage report --rcfile=integration_tests.coveragerc;
 
@@ -122,8 +122,8 @@ coverage-integration:
 	rm -rf coverage_reports;
 	rm -f integration.coverage;
 	#cd storey
-	#COVERAGE_FILE=integration.coverage coverage run --rcfile=integration_tests.coveragerc  --source=. -m pytest -rf -v integration || echo "tests failed, continue" #  just for fork run, TODO delete.
-	COVERAGE_FILE=integration.coverage coverage run --rcfile=integration_tests.coveragerc --source=. -m pytest -v integration/test_flow_integration.py::test_join_with_http || echo "tests failed, continue" #  just for fork run, TODO delete.
+	COVERAGE_FILE=integration.coverage coverage run --rcfile=integration_tests.coveragerc  --source=. -m pytest -rf -v integration || echo "tests failed, continue" #  just for fork run, TODO delete.
+	#COVERAGE_FILE=integration.coverage coverage run --rcfile=integration_tests.coveragerc --source=. -m pytest -v integration/test_flow_integration.py::test_join_with_http || echo "tests failed, continue" #  just for fork run, TODO delete.
 	echo "coverage integration report:";
 	COVERAGE_FILE=integration.coverage coverage report --rcfile=integration_tests.coveragerc;
 
