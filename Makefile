@@ -50,11 +50,49 @@ flake8:
 	@echo "Running flake8 lint..."
 	@python -m flake8 $(FLAKE8_OPTIONS) $(CHECKED_IN_PYTHON_FILES)
 
+
+.PHONY: if-bash
+Coverage=False
+if-bash:
+	@case "$(Coverage)" in \
+		-r) \
+			echo "Performing clean with -r flag";; \
+		-s) \
+			echo "Performing clean with -s flag";; \
+	esac
+
 .PHONY: test
+
+Coverage=False
 test:
 	find storey -name '*.pyc' -exec rm {} \;
 	find tests -name '*.pyc' -exec rm {} \;
-	python -m pytest --ignore=integration -rf -v .
+
+	@case "$(Coverage)" in \
+		-r) \
+			echo "Performing clean with -r flag";; \
+	esac
+
+
+	@case "$(Coverage)" in \
+		"FULL") \
+			rm -rf coverage_reports; \
+			rm -f full_unit_tests.coverage; \
+			COVERAGE_FILE=full_unit_tests.coverage coverage run --rcfile=integration_tests.coveragerc --source=. -m pytest ./tests/test_utils.py::test_get_path_utils -rf -v; \
+			COVERAGE_FILE=full_unit_tests.coverage coverage report --rcfile=integration_tests.coveragerc; \
+			echo "in FULL";; \
+  		"ignore integration") \
+			COVERAGE_FILE=unit_tests.coverage coverage run --rcfile=unit_tests.coveragerc --source=. -m pytest ./tests/test_utils.py::test_get_path_utils  --ignore=integration -rf -v; \
+			coverage report; \
+			echo "in ignore integration";; \
+		*) \
+		  	python -m pytest --ignore=integration -rf -v ./tests/test_utils.py::test_get_path_utils; \
+		 	echo "no coverage";; \
+	esac
+
+#COVERAGE_FILE=full_unit_tests.coverage coverage run --rcfile=integration_tests.coveragerc --source=. -m pytest --ignore=integration -rf -v; \
+COVERAGE_FILE=unit_tests.coverage coverage run --rcfile=unit_tests.coveragerc --source=. -m pytest --ignore=integration -rf -v;
+#python -m pytest --ignore=integration -rf -v . \
 
 .PHONY: bench
 bench:
