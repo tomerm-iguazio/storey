@@ -81,7 +81,7 @@ test:
 		echo "no coverage"; \
 	fi
 
-#COVERAGE_FILE=full_unit_tests.coverage coverage run --rcfile=tests.coveragerc --source=. -m pytest --ignore=integration -rf -v; \
+#COVERAGE_FILE=unit_tests.coverage coverage run --rcfile=tests.coveragerc --source=. -m pytest --ignore=integration -rf -v; \
 COVERAGE_FILE=unit_tests.coverage coverage run --rcfile=tests.coveragerc --source=. -m pytest --ignore=integration -rf -v;
 #python -m pytest --ignore=integration -rf -v . \
 
@@ -148,12 +148,12 @@ coverage-combine:
 	find storey -name '*.pyc' -exec rm {} \;
 	find tests -name '*.pyc' -exec rm {} \;
 	find integration -name '*.pyc' -exec rm {} \;
-	COVERAGE_FILE=combined.coverage coverage combine --keep integration.coverage full_unit_tests.coverage;
+	COVERAGE_FILE=combined.coverage coverage combine --keep integration.coverage unit_tests.coverage;
 	echo "coverage full report:";
 	COVERAGE_FILE=combined.coverage coverage report --rcfile=tests.coveragerc -i;
 
 .PHONY: full-coverage
 full-coverage:
-	make full-coverage-unit-tests;
-	make coverage-integration;
+	make test Coverage=True;
+	make integration Coverage=True;
 	make coverage-combine
