@@ -1,5 +1,7 @@
 [run]
 
+source=./storey
+
 omit =
     */tests/*
     */integration/*
