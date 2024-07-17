@@ -72,8 +72,8 @@ test:
 
 	@if [ "$(Coverage)" = "True" ]; then \
 		rm -rf coverage_reports; \
-		rm -f full_unit_tests.coverage; \
-		COVERAGE_FILE=unit_tests.coverage coverage run --rcfile=unit_tests.coveragerc --source=./storey -m pytest ./tests/test_utils.py::test_get_path_utils  --ignore=integration -rf -v; \
+		rm -f unit_tests.coverage; \
+		COVERAGE_FILE=unit_tests.coverage coverage run --rcfile=tests.coveragerc --source=./storey -m pytest ./tests/test_utils.py::test_get_path_utils  --ignore=integration -rf -v; \
 		coverage COVERAGE_FILE=unit_tests.coverage report; \
 		echo "in ignore integration"; \
 	else \
@@ -81,8 +81,8 @@ test:
 		echo "no coverage"; \
 	fi
 
-#COVERAGE_FILE=full_unit_tests.coverage coverage run --rcfile=integration_tests.coveragerc --source=. -m pytest --ignore=integration -rf -v; \
-COVERAGE_FILE=unit_tests.coverage coverage run --rcfile=unit_tests.coveragerc --source=. -m pytest --ignore=integration -rf -v;
+#COVERAGE_FILE=full_unit_tests.coverage coverage run --rcfile=tests.coveragerc --source=. -m pytest --ignore=integration -rf -v; \
+COVERAGE_FILE=unit_tests.coverage coverage run --rcfile=tests.coveragerc --source=. -m pytest --ignore=integration -rf -v;
 #python -m pytest --ignore=integration -rf -v . \
 
 .PHONY: bench
@@ -99,9 +99,9 @@ integration:
 	@if [ "$(Coverage)" = "True" ]; then \
 		rm -rf coverage_reports; \
 		rm -f integration.coverage; \
-		COVERAGE_FILE=integration.coverage coverage run --rcfile=integration_tests.coveragerc  --source=. -m pytest -rf -v integration; \
+		COVERAGE_FILE=integration.coverage coverage run --rcfile=tests.coveragerc  --source=. -m pytest -rf -v integration; \
 		echo "coverage integration report:"; \
-		COVERAGE_FILE=integration.coverage coverage report --rcfile=integration_tests.coveragerc; \
+		COVERAGE_FILE=integration.coverage coverage report --rcfile=tests.coveragerc; \
 	else \
 		python -m pytest -rf -v integration/test_aggregation_integration.py::test_aggregate_and_query_with_different_sliding_windows || echo "continue"; \
 	fi
@@ -134,38 +134,12 @@ docs: # Build html docs
 	rm -f docs/external/*.md
 	cd docs && make html
 
-.PHONY: coverage
-coverage:
-	find storey -name '*.pyc' -exec rm {} \;
-	find tests -name '*.pyc' -exec rm {} \;
-	rm -rf coverage_reports;
-	rm -f unit_tests.coverage
-	COVERAGE_FILE=unit_tests.coverage coverage run --rcfile=unit_tests.coveragerc --source=. -m pytest --ignore=integration -rf -v;
-	coverage report
-	coverage xml -o coverage_reports/coverage_unit_tests.xml
+#  .PHONY: coverage TODO make sure all deleted
 
 
-.PHONY: full-coverage-unit-tests
-full-coverage-unit-tests:
-	find storey -name '*.pyc' -exec rm {} \;
-	find tests -name '*.pyc' -exec rm {} \;
-	find integration -name '*.pyc' -exec rm {} \;
-	rm -rf coverage_reports;
-	rm -f full_unit_tests.coverage;
-	COVERAGE_FILE=full_unit_tests.coverage coverage run --rcfile=integration_tests.coveragerc --source=. -m pytest --ignore=integration -rf -v;
-	echo "coverage unit test report without excluding integration files:";
-	COVERAGE_FILE=full_unit_tests.coverage coverage report --rcfile=integration_tests.coveragerc;
+# .PHONY: full-coverage-unit-tests TODO make sure all deleted
 
-.PHONY: coverage-integration
-coverage-integration:
-	find storey -name '*.pyc' -exec rm {} \;
-	find tests -name '*.pyc' -exec rm {} \;
-	find integration -name '*.pyc' -exec rm {} \;
-	rm -rf coverage_reports;
-	rm -f integration.coverage;
-	COVERAGE_FILE=integration.coverage coverage run --rcfile=integration_tests.coveragerc  --source=. -m pytest -rf -v integration
-	echo "coverage integration report:";
-	COVERAGE_FILE=integration.coverage coverage report --rcfile=integration_tests.coveragerc;
+#  .PHONY: coverage-integration TODO make sure all deleted
 
 
 .PHONY: coverage-combine
@@ -176,7 +150,7 @@ coverage-combine:
 	find integration -name '*.pyc' -exec rm {} \;
 	COVERAGE_FILE=combined.coverage coverage combine --keep integration.coverage full_unit_tests.coverage;
 	echo "coverage full report:";
-	COVERAGE_FILE=combined.coverage coverage report --rcfile=integration_tests.coveragerc -i;
+	COVERAGE_FILE=combined.coverage coverage report --rcfile=tests.coveragerc -i;
 
 .PHONY: full-coverage
 full-coverage:
