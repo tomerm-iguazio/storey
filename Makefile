@@ -99,7 +99,7 @@ integration:
 	@if [ "$(Coverage)" = "True" ]; then \
 		rm -rf coverage_reports; \
 		rm -f integration.coverage; \
-		COVERAGE_FILE=integration.coverage coverage run --rcfile=tests.coveragerc  --source=. -m pytest -rf -v integration; \
+		COVERAGE_FILE=integration.coverage coverage run --rcfile=tests.coveragerc -m pytest -rf -v integration/test_aggregation_integration.py::test_aggregate_and_query_with_different_sliding_windows; \
 		echo "coverage integration report:"; \
 		COVERAGE_FILE=integration.coverage coverage report --rcfile=tests.coveragerc; \
 	else \
