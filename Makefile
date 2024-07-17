@@ -74,7 +74,7 @@ test:
 		rm -rf coverage_reports; \
 		rm -f unit_tests.coverage; \
 		COVERAGE_FILE=unit_tests.coverage coverage run --rcfile=tests.coveragerc --source=./storey -m pytest ./tests/test_utils.py::test_get_path_utils  --ignore=integration -rf -v; \
-		coverage COVERAGE_FILE=unit_tests.coverage report; \
+		COVERAGE_FILE=unit_tests.coverage coverage report; \
 		echo "in ignore integration"; \
 	else \
 		python -m pytest --ignore=integration -rf -v ./tests/test_utils.py::test_get_path_utils; \
