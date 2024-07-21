@@ -24,7 +24,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage_unit_tests_report
-          path: full_unit_tests.coverage
+          path: unit_tests.coverage
 
   integration:
     name: Integration tests
