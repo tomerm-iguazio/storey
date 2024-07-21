@@ -3,7 +3,7 @@ name: Dev Changes
 on:
   push:
     branches:
-      - development
+      - local-coverage
 
 jobs:
   test:

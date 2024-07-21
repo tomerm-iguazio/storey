@@ -73,7 +73,7 @@ test:
 	@if [ "$(Coverage)" = "True" ]; then \
 		rm -rf coverage_reports; \
 		rm -f unit_tests.coverage; \
-		COVERAGE_FILE=unit_tests.coverage coverage run --rcfile=tests.coveragerc -m pytest ./tests/test_utils.py::test_get_path_utils  --ignore=integration -rf -v; \
+		COVERAGE_FILE=unit_tests.coverage coverage run --rcfile=tests.coveragerc -m pytest ./tests/test_utils.py::test_ds_get_path_utils  --ignore=integration -rf -v; \
 		COVERAGE_FILE=unit_tests.coverage coverage report --rcfile=tests.coveragerc; \
 		echo "in ignore integration"; \
 	else \
