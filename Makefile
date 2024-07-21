@@ -134,8 +134,8 @@ coverage-combine:
 	@echo coverage full report:
 	COVERAGE_FILE=combined.coverage coverage report --rcfile=tests.coveragerc -i
 
-.PHONY: full-coverage
-full-coverage:
+.PHONY: coverage
+coverage:
 	make test Coverage=True
 	make integration Coverage=True
 	make coverage-combine
