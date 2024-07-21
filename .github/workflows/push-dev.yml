@@ -62,17 +62,26 @@ jobs:
           cache: pip
       - name: Install dependencies
         run: make dev-env
+
       - name: Download unit tests coverage report
         uses: actions/download-artifact@v4
         with:
           name: coverage_unit_tests_report-${{ github.run_id }}
-          path: ./coverage_unit_tests_report # where to download. file downloaded by name.
+          path: . # where to download. file downloaded by name.
+
+      - name: rename coverage unittest artifact
+        run:
+          mv coverage_unit_tests_report-${{ github.run_id }} unit_tests.coverage
 
       - name: Download integration coverage report
         uses: actions/download-artifact@v4
         with:
           name: coverage_integration_report-${{ github.run_id }}
-          path: ./coverage_integration_report # where to download. file downloaded by name.
+          path: . # where to download. file downloaded by name.
+
+      - name: rename coverage integration artifact
+        run:
+          mv coverage_integration_report-${{ github.run_id }} integration.coverage
 
       - name: combine coverage
         run: make coverage-combine
