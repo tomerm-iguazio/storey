@@ -70,7 +70,7 @@ jobs:
         with:
           name: coverage_unit_tests_report-${{ github.run_id }}
           path: . # where to download. file downloaded by name.
-      - name: rename coverage unittest artifact
+      - name: ls
         run: ls .
       - name: rename coverage unittest artifact
         run:
