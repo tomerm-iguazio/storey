@@ -19,7 +19,7 @@ jobs:
       - name: Install dependencies
         run: make dev-env
       - name: Run unit tests
-        run: make full-coverage-unit-tests
+        run: make test Coverage=True
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
@@ -41,7 +41,7 @@ jobs:
           V3IO_API: ${{ secrets.V3IO_API }}
           V3IO_ACCESS_KEY: ${{ secrets.V3IO_ACCESS_KEY }}
           V3IO_FRAMESD: ${{ secrets.V3IO_FRAMESD }}
-        run: make coverage-integration
+        run: make integration Coverage=True
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
