@@ -70,10 +70,11 @@ jobs:
         with:
           name: coverage_unit_tests_report-${{ github.run_id }}
           path: . # where to download. file downloaded by name.
-
+      - name: rename coverage unittest artifact
+        run: ls .
       - name: rename coverage unittest artifact
         run:
-          mv coverage_unit_tests_report-${{ github.run_id }} unit_tests.coverage
+          mv ./coverage_unit_tests_report-${{ github.run_id }} unit_tests.coverage
 
       - name: Download integration coverage report
         uses: actions/download-artifact@v4
@@ -83,7 +84,7 @@ jobs:
 
       - name: rename coverage integration artifact
         run:
-          mv coverage_integration_report-${{ github.run_id }} integration.coverage
+          mv ./coverage_integration_report-${{ github.run_id }} integration.coverage
 
       - name: combine coverage
         run: make coverage-combine
