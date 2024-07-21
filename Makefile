@@ -123,26 +123,19 @@ docs: # Build html docs
 	rm -f docs/external/*.md
 	cd docs && make html
 
-#  .PHONY: coverage TODO make sure all deleted
-
-
-# .PHONY: full-coverage-unit-tests TODO make sure all deleted
-
-#  .PHONY: coverage-integration TODO make sure all deleted
-
 
 .PHONY: coverage-combine
 coverage-combine:
-	rm -f combined.coverage;
+	rm -f combined.coverage
 	find storey -name '*.pyc' -exec rm {} \;
 	find tests -name '*.pyc' -exec rm {} \;
 	find integration -name '*.pyc' -exec rm {} \;
-	COVERAGE_FILE=combined.coverage coverage combine --keep integration.coverage unit_tests.coverage;
-	@echo coverage full report:;
-	COVERAGE_FILE=combined.coverage coverage report --rcfile=tests.coveragerc -i;
+	COVERAGE_FILE=combined.coverage coverage combine --keep integration.coverage unit_tests.coverage
+	@echo coverage full report:
+	COVERAGE_FILE=combined.coverage coverage report --rcfile=tests.coveragerc -i
 
 .PHONY: full-coverage
 full-coverage:
-	make test Coverage=True;
-	make integration Coverage=True;
+	make test Coverage=True
+	make integration Coverage=True
 	make coverage-combine
