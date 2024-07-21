@@ -51,16 +51,6 @@ flake8:
 	@python -m flake8 $(FLAKE8_OPTIONS) $(CHECKED_IN_PYTHON_FILES)
 
 
-.PHONY: if-bash
-Coverage=False
-if-bash:
-	@case "$(Coverage)" in \
-		-r) \
-			echo "Performing clean with -r flag";; \
-		-s) \
-			echo "Performing clean with -s flag";; \
-	esac
-
 .PHONY: test
 
 Coverage=False
@@ -74,11 +64,10 @@ test:
 		rm -rf coverage_reports; \
 		rm -f unit_tests.coverage; \
 		COVERAGE_FILE=unit_tests.coverage coverage run --rcfile=tests.coveragerc -m pytest ./tests/test_utils.py::test_ds_get_path_utils  --ignore=integration -rf -v; \
+		echo "unit test coverage report:"; \
 		COVERAGE_FILE=unit_tests.coverage coverage report --rcfile=tests.coveragerc; \
-		echo "in ignore integration"; \
 	else \
 		python -m pytest --ignore=integration -rf -v ./tests/test_utils.py::test_get_path_utils; \
-		echo "no coverage"; \
 	fi
 
 #COVERAGE_FILE=unit_tests.coverage coverage run --rcfile=tests.coveragerc --source=. -m pytest --ignore=integration -rf -v; \
@@ -149,7 +138,7 @@ coverage-combine:
 	find tests -name '*.pyc' -exec rm {} \;
 	find integration -name '*.pyc' -exec rm {} \;
 	COVERAGE_FILE=combined.coverage coverage combine --keep integration.coverage unit_tests.coverage;
-	echo "coverage full report:";
+	@echo coverage full report:;
 	COVERAGE_FILE=combined.coverage coverage report --rcfile=tests.coveragerc -i;
 
 .PHONY: full-coverage
