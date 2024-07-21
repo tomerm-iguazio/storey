@@ -72,6 +72,8 @@ jobs:
           path: . # where to download. file downloaded by name.
       - name: ls
         run: ls .
+      - name: pwd
+        run: pwd
       - name: rename coverage unittest artifact
         run:
           mv ./coverage_unit_tests_report-${{ github.run_id }} unit_tests.coverage
