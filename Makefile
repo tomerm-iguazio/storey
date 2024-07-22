@@ -61,7 +61,7 @@ test:
 
 	@if [ "$(Coverage)" = "True" ]; then \
 		rm -rf coverage_reports/unit_tests.coverage; \
-		COVERAGE_FILE=coverage_reports/unit_tests.coverage coverage run --rcfile=tests.coveragerc -m pytest .  --ignore=integration -rf -v; \
+		COVERAGE_FILE=coverage_reports/unit_tests.coverage coverage run --rcfile=tests.coveragerc -m pytest --ignore=integration -rf -v .; \
 		echo "unit test coverage report:"; \
 		COVERAGE_FILE=coverage_reports/unit_tests.coverage coverage report --rcfile=tests.coveragerc; \
 	else \
