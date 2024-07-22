@@ -20,6 +20,7 @@ jobs:
         run: make dev-env
       - name: Run unit tests
         run: make test Coverage=True
+      #  in order to get unique identifier we use github.run_id with artifact name.
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
@@ -43,7 +44,7 @@ jobs:
           V3IO_ACCESS_KEY: ${{ secrets.V3IO_ACCESS_KEY }}
           V3IO_FRAMESD: ${{ secrets.V3IO_FRAMESD }}
         run: make integration Coverage=True
-
+        #  in order to get unique identifier we use github.run_id with artifact name.
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
@@ -64,31 +65,18 @@ jobs:
           cache: pip
       - name: Install dependencies
         run: make dev-env
-      - name: ls before download
-        run: ls
+      #  File name is not effected by the artifact name (=identifier only).
       - name: Download unit tests coverage report
         uses: actions/download-artifact@v4
         with:
           name: coverage_unit_tests_report-${{ github.run_id }}
           path: . # where to download. file downloaded by name.
-      - name: ls
-        run: ls
-      - name: pwd
-        run: pwd
-      - name: rename coverage unittest artifact
-        run:
-          mv coverage_unit_tests_report-${{ github.run_id }} unit_tests.coverage
-
       - name: Download integration coverage report
         uses: actions/download-artifact@v4
         with:
           name: coverage_integration_report-${{ github.run_id }}
           path: . # where to download. file downloaded by name.
-
       - name: rename coverage integration artifact
-        run:
-          mv ./coverage_integration_report-${{ github.run_id }} integration.coverage
-
       - name: combine coverage
         run: make coverage-combine
 
