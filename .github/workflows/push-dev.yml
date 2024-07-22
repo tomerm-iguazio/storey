@@ -3,7 +3,7 @@ name: Dev Changes
 on:
   push:
     branches:
-      - development
+      - local-coverage
 
 jobs:
   test:
@@ -78,3 +78,11 @@ jobs:
           path: coverage_reports/ # where to download. file downloaded by name.
       - name: combine coverage
         run: make coverage-combine
+
+      #  in order to be able to download it from the github run:
+      - name: Upload coverage combined report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage_combined_report-${{ github.run_id }}
+          path: coverage_reports/combined.coverage
+          retention-days: 30
