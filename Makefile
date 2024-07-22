@@ -61,17 +61,16 @@ test:
 
 
 	@if [ "$(Coverage)" = "True" ]; then \
-		rm -rf coverage_reports; \
-		rm -f unit_tests.coverage; \
-		COVERAGE_FILE=unit_tests.coverage coverage run --rcfile=tests.coveragerc -m pytest ./tests/test_utils.py::test_ds_get_path_utils  --ignore=integration -rf -v; \
+		rm -rf coverage_reports/unit_tests.coverage; \
+		COVERAGE_FILE=coverage_reports/unit_tests.coverage coverage run --rcfile=tests.coveragerc -m pytest ./tests/test_utils.py::test_ds_get_path_utils  --ignore=integration -rf -v; \
 		echo "unit test coverage report:"; \
-		COVERAGE_FILE=unit_tests.coverage coverage report --rcfile=tests.coveragerc; \
+		COVERAGE_FILE=coverage_reports/unit_tests.coverage coverage report --rcfile=tests.coveragerc; \
 	else \
 		python -m pytest --ignore=integration -rf -v ./tests/test_utils.py::test_get_path_utils; \
 	fi
 
-#COVERAGE_FILE=unit_tests.coverage coverage run --rcfile=tests.coveragerc --source=. -m pytest --ignore=integration -rf -v; \
-COVERAGE_FILE=unit_tests.coverage coverage run --rcfile=tests.coveragerc --source=. -m pytest --ignore=integration -rf -v;
+#COVERAGE_FILE=coverage_reports/unit_tests.coverage coverage run --rcfile=tests.coveragerc --source=. -m pytest --ignore=integration -rf -v; \
+COVERAGE_FILE=coverage_reports/unit_tests.coverage coverage run --rcfile=tests.coveragerc --source=. -m pytest --ignore=integration -rf -v;
 #python -m pytest --ignore=integration -rf -v . \
 
 .PHONY: bench
@@ -86,11 +85,10 @@ integration:
 	find integration -name '*.pyc' -exec rm {} \;
 
 	@if [ "$(Coverage)" = "True" ]; then \
-		rm -rf coverage_reports; \
-		rm -f integration.coverage; \
-		COVERAGE_FILE=integration.coverage coverage run --rcfile=tests.coveragerc -m pytest -rf -v integration/test_aggregation_integration.py::test_aggregate_and_query_with_different_sliding_windows; \
+		rm -f coverage_reports/integration.coverage; \
+		COVERAGE_FILE=coverage_reports/integration.coverage coverage run --rcfile=tests.coveragerc -m pytest -rf -v integration/test_aggregation_integration.py::test_aggregate_and_query_with_different_sliding_windows; \
 		echo "coverage integration report:"; \
-		COVERAGE_FILE=integration.coverage coverage report --rcfile=tests.coveragerc; \
+		COVERAGE_FILE=coverage_reports/integration.coverage coverage report --rcfile=tests.coveragerc; \
 	else \
 		python -m pytest -rf -v integration/test_aggregation_integration.py::test_aggregate_and_query_with_different_sliding_windows || echo "continue"; \
 	fi
@@ -126,16 +124,17 @@ docs: # Build html docs
 
 .PHONY: coverage-combine
 coverage-combine:
-	rm -f combined.coverage
+	rm -f coverage_reports/combined.coverage
 	find storey -name '*.pyc' -exec rm {} \;
 	find tests -name '*.pyc' -exec rm {} \;
 	find integration -name '*.pyc' -exec rm {} \;
-	COVERAGE_FILE=combined.coverage coverage combine --keep integration.coverage unit_tests.coverage
+	COVERAGE_FILE=coverage_reports/combined.coverage coverage combine --keep coverage_reports/integration.coverage coverage_reports/unit_tests.coverage
 	@echo coverage full report:
-	COVERAGE_FILE=combined.coverage coverage report --rcfile=tests.coveragerc -i
+	COVERAGE_FILE=coverage_reports/combined.coverage coverage report --rcfile=tests.coveragerc -i
 
 .PHONY: coverage
 coverage:
+	rm -rf coverage_reports;
 	make test Coverage=True
 	make integration Coverage=True
 	make coverage-combine

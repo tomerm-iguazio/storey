@@ -25,7 +25,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage_unit_tests_report-${{ github.run_id }}
-          path: unit_tests.coverage
+          path: coverage_reports/unit_tests.coverage
           retention-days: 30
 
   integration:
@@ -49,7 +49,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage_integration_report-${{ github.run_id }}
-          path: integration.coverage
+          path: coverage_reports/integration.coverage
           retention-days: 30
 
   full_coverage:
@@ -70,12 +70,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: coverage_unit_tests_report-${{ github.run_id }}
-          path: . # where to download. file downloaded by name.
+          path: coverage_reports/ # where to download. file downloaded by name.
       - name: Download integration coverage report
         uses: actions/download-artifact@v4
         with:
           name: coverage_integration_report-${{ github.run_id }}
-          path: . # where to download. file downloaded by name.
+          path: coverage_reports/ # where to download. file downloaded by name.
       - name: combine coverage
         run: make coverage-combine
-
