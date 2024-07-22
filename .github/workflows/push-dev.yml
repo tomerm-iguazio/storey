@@ -76,7 +76,6 @@ jobs:
         with:
           name: coverage_integration_report-${{ github.run_id }}
           path: . # where to download. file downloaded by name.
-      - name: rename coverage integration artifact
       - name: combine coverage
         run: make coverage-combine
 
