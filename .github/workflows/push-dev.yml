@@ -64,7 +64,8 @@ jobs:
           cache: pip
       - name: Install dependencies
         run: make dev-env
-
+      - name: ls before download
+        run: ls
       - name: Download unit tests coverage report
         uses: actions/download-artifact@v4
         with:
