@@ -53,7 +53,6 @@ flake8:
 
 .PHONY: test
 
-Coverage=False
 test:
 	find storey -name '*.pyc' -exec rm {} \;
 	find tests -name '*.pyc' -exec rm {} \;

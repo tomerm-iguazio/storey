@@ -26,7 +26,7 @@ jobs:
         with:
           name: coverage_unit_tests_report-${{ github.run_id }}
           path: coverage_reports/unit_tests.coverage
-          retention-days: 30
+          retention-days: 90
 
   integration:
     name: Integration tests
@@ -50,7 +50,7 @@ jobs:
         with:
           name: coverage_integration_report-${{ github.run_id }}
           path: coverage_reports/integration.coverage
-          retention-days: 30
+          retention-days: 90
 
   full_coverage:
     name: Full coverage
@@ -85,4 +85,4 @@ jobs:
         with:
           name: coverage_combined_report-${{ github.run_id }}
           path: coverage_reports/combined.coverage
-          retention-days: 30
+          retention-days: 90
