@@ -52,7 +52,7 @@ jobs:
           path: coverage_reports/integration.coverage
           retention-days: 90
 
-  full_coverage:
+  coverage:
     name: Full coverage
     runs-on: ubuntu-latest
     needs: [test, integration]
