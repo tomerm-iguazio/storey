@@ -116,9 +116,6 @@ docs: # Build html docs
 
 .PHONY: coverage-combine
 coverage-combine:
-	rm -f coverage_reports/combined.coverage
-	find storey -name '*.pyc' -exec rm {} \;
-	find tests -name '*.pyc' -exec rm {} \;
 	find integration -name '*.pyc' -exec rm {} \;
 	COVERAGE_FILE=coverage_reports/combined.coverage coverage combine --keep coverage_reports/integration.coverage coverage_reports/unit_tests.coverage
 	@echo coverage full report:
