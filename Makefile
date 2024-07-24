@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+.NOTPARALLEL:
+
 .PHONY: all
 all:
 	$(error please pick a target)
@@ -75,19 +77,18 @@ bench:
 	python -m pytest --benchmark-json bench-results.json -rf -v bench/*.py
 
 .PHONY: integration
-integration:
-	find storey -name '*.pyc' -exec rm {} \;
-	find tests -name '*.pyc' -exec rm {} \;
+integration:clean-test
 	find integration -name '*.pyc' -exec rm {} \;
+	python -m pytest -rf -v integration; \
 
-	@if [ "$(Coverage)" = "True" ]; then \
-		rm -f coverage_reports/integration.coverage; \
-		COVERAGE_FILE=coverage_reports/integration.coverage coverage run --rcfile=tests.coveragerc -m pytest -rf -v integration; \
-		echo "coverage integration report:"; \
-		COVERAGE_FILE=coverage_reports/integration.coverage coverage report --rcfile=tests.coveragerc; \
-	else \
-		python -m pytest -rf -v integration; \
-	fi
+
+.PHONY: integration-coverage
+integration-coverage:clean-test
+	find integration -name '*.pyc' -exec rm {} \;
+	rm -f coverage_reports/integration.coverage
+	COVERAGE_FILE=coverage_reports/integration.coverage coverage run --rcfile=tests.coveragerc -m pytest -rf -v integration
+	@echo "coverage integration report:"
+	COVERAGE_FILE=coverage_reports/integration.coverage coverage report --rcfile=tests.coveragerc
 
 .PHONY: env
 env:
@@ -117,14 +118,10 @@ docs: # Build html docs
 
 .PHONY: coverage-combine
 coverage-combine:
-	find integration -name '*.pyc' -exec rm {} \;
+	rm -f coverage_reports/combined.coverage
 	COVERAGE_FILE=coverage_reports/combined.coverage coverage combine --keep coverage_reports/integration.coverage coverage_reports/unit_tests.coverage
 	@echo coverage full report:
 	COVERAGE_FILE=coverage_reports/combined.coverage coverage report --rcfile=tests.coveragerc -i
 
 .PHONY: coverage
-coverage:
-	rm -rf coverage_reports
-	make test Coverage=True
-	make integration Coverage=True
-	make coverage-combine
+coverage:test-coverage integration-coverage coverage-combine

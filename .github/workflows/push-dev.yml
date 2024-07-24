@@ -3,7 +3,7 @@ name: Dev Changes
 on:
   push:
     branches:
-      - development
+      - local-coverage
 
 jobs:
   test:
@@ -19,7 +19,7 @@ jobs:
       - name: Install dependencies
         run: make dev-env
       - name: Run unit tests
-        run: make test Coverage=True
+        run: make test-coverage
       #  in order to get unique identifier we use github.run_id with artifact name.
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
@@ -43,7 +43,7 @@ jobs:
           V3IO_API: ${{ secrets.V3IO_API }}
           V3IO_ACCESS_KEY: ${{ secrets.V3IO_ACCESS_KEY }}
           V3IO_FRAMESD: ${{ secrets.V3IO_FRAMESD }}
-        run: make integration Coverage=True
+        run: make integration-coverage
         #  in order to get unique identifier we use github.run_id with artifact name.
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
@@ -76,7 +76,7 @@ jobs:
         with:
           name: coverage_integration_report-${{ github.run_id }}
           path: coverage_reports/ # where to download. file downloaded by name.
-      - name: combine coverage
+      - name: Combine coverage
         run: make coverage-combine
 
       #  in order to be able to download it from the github run:
