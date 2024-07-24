@@ -79,7 +79,7 @@ bench:
 .PHONY: integration
 integration:clean-test
 	find integration -name '*.pyc' -exec rm {} \;
-	python -m pytest -rf -v integration; \
+	python -m pytest -rf -v integration
 
 
 .PHONY: integration-coverage
@@ -120,7 +120,7 @@ docs: # Build html docs
 coverage-combine:
 	rm -f coverage_reports/combined.coverage
 	COVERAGE_FILE=coverage_reports/combined.coverage coverage combine --keep coverage_reports/integration.coverage coverage_reports/unit_tests.coverage
-	@echo coverage full report:
+	@echo "coverage full report:"
 	COVERAGE_FILE=coverage_reports/combined.coverage coverage report --rcfile=tests.coveragerc -i
 
 .PHONY: coverage
