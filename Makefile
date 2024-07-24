@@ -52,7 +52,6 @@ flake8:
 	@echo "Running flake8 lint..."
 	@python -m flake8 $(FLAKE8_OPTIONS) $(CHECKED_IN_PYTHON_FILES)
 
-
 .PHONY: clean-test
 clean-test:
 	find storey -name '*.pyc' -exec rm {} \;
@@ -80,7 +79,6 @@ bench:
 integration:clean-test
 	find integration -name '*.pyc' -exec rm {} \;
 	python -m pytest -rf -v integration
-
 
 .PHONY: integration-coverage
 integration-coverage:clean-test
@@ -114,7 +112,6 @@ set-version:
 docs: # Build html docs
 	rm -f docs/external/*.md
 	cd docs && make html
-
 
 .PHONY: coverage-combine
 coverage-combine:
