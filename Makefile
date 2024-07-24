@@ -51,22 +51,23 @@ flake8:
 	@python -m flake8 $(FLAKE8_OPTIONS) $(CHECKED_IN_PYTHON_FILES)
 
 
-.PHONY: test
-
-test:
+.PHONY: clean-test
+clean-test:
 	find storey -name '*.pyc' -exec rm {} \;
 	find tests -name '*.pyc' -exec rm {} \;
 
+.PHONY: test
 
-	@if [ "$(Coverage)" = "True" ]; then \
-		rm -rf coverage_reports/unit_tests.coverage; \
-		COVERAGE_FILE=coverage_reports/unit_tests.coverage coverage run --rcfile=tests.coveragerc -m pytest --ignore=integration -rf -v .; \
-		echo "unit test coverage report:"; \
-		COVERAGE_FILE=coverage_reports/unit_tests.coverage coverage report --rcfile=tests.coveragerc; \
-	else \
-		python -m pytest --ignore=integration -rf -v .; \
-	fi
+test: clean-test
+	python -m pytest --ignore=integration -rf -v .
 
+.PHONY: test-coverage
+
+test-coverage: clean-test
+	rm -rf coverage_reports/unit_tests.coverage
+	COVERAGE_FILE=coverage_reports/unit_tests.coverage coverage run --rcfile=tests.coveragerc -m pytest --ignore=integration -rf -v .
+	@echo "unit test coverage report:"
+	COVERAGE_FILE=coverage_reports/unit_tests.coverage coverage report --rcfile=tests.coveragerc
 
 .PHONY: bench
 bench:
@@ -123,7 +124,7 @@ coverage-combine:
 
 .PHONY: coverage
 coverage:
-	rm -rf coverage_reports;
+	rm -rf coverage_reports
 	make test Coverage=True
 	make integration Coverage=True
 	make coverage-combine
