@@ -57,6 +57,10 @@ clean-test:
 	find storey -name '*.pyc' -exec rm {} \;
 	find tests -name '*.pyc' -exec rm {} \;
 
+.PHONY: clean-integration
+clean-integration: clean-test
+	find integration -name '*.pyc' -exec rm {} \;
+
 .PHONY: test
 test: clean-test
 	python -m pytest --ignore=integration -rf -v .
@@ -74,12 +78,11 @@ bench:
 	python -m pytest --benchmark-json bench-results.json -rf -v bench/*.py
 
 .PHONY: integration
-integration: clean-test
-	find integration -name '*.pyc' -exec rm {} \;
+integration: clean-integration
 	python -m pytest -rf -v integration
 
 .PHONY: integration-coverage
-integration-coverage: clean-test
+integration-coverage: clean-integration
 	find integration -name '*.pyc' -exec rm {} \;
 	rm -f coverage_reports/integration.coverage
 	COVERAGE_FILE=coverage_reports/integration.coverage coverage run --rcfile=tests.coveragerc -m pytest -rf -v integration
@@ -119,4 +122,4 @@ coverage-combine:
 	COVERAGE_FILE=coverage_reports/combined.coverage coverage report --rcfile=tests.coveragerc -i
 
 .PHONY: coverage
-coverage:test-coverage integration-coverage coverage-combine
+coverage: test-coverage integration-coverage coverage-combine
