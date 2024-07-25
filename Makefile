@@ -83,7 +83,7 @@ integration-coverage: clean-test
 	find integration -name '*.pyc' -exec rm {} \;
 	rm -f coverage_reports/integration.coverage
 	COVERAGE_FILE=coverage_reports/integration.coverage coverage run --rcfile=tests.coveragerc -m pytest -rf -v integration
-	@echo "coverage integration report:"
+	@echo "Coverage integration report:"
 	COVERAGE_FILE=coverage_reports/integration.coverage coverage report --rcfile=tests.coveragerc
 
 .PHONY: env
@@ -115,7 +115,7 @@ docs: # Build html docs
 coverage-combine:
 	rm -f coverage_reports/combined.coverage
 	COVERAGE_FILE=coverage_reports/combined.coverage coverage combine --keep coverage_reports/integration.coverage coverage_reports/unit_tests.coverage
-	@echo "coverage full report:"
+	@echo "Coverage full report:"
 	COVERAGE_FILE=coverage_reports/combined.coverage coverage report --rcfile=tests.coveragerc -i
 
 .PHONY: coverage
