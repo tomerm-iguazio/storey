@@ -58,7 +58,6 @@ clean-test:
 	find tests -name '*.pyc' -exec rm {} \;
 
 .PHONY: test
-
 test: clean-test
 	python -m pytest --ignore=integration -rf -v .
 
