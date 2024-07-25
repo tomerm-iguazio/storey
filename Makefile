@@ -83,7 +83,6 @@ integration: clean-integration
 
 .PHONY: integration-coverage
 integration-coverage: clean-integration
-	find integration -name '*.pyc' -exec rm {} \;
 	rm -f coverage_reports/integration.coverage
 	COVERAGE_FILE=coverage_reports/integration.coverage coverage run --rcfile=tests.coveragerc -m pytest -rf -v integration
 	@echo "Integration test coverage report:"
