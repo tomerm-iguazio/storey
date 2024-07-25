@@ -1,5 +1,5 @@
 .gitignore
 .idea
 venv
-.coverage
+*.coverage
 coverage_reports
