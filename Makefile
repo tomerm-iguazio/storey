@@ -62,11 +62,10 @@ test: clean-test
 	python -m pytest --ignore=integration -rf -v .
 
 .PHONY: test-coverage
-
 test-coverage: clean-test
 	rm -f coverage_reports/unit_tests.coverage
 	COVERAGE_FILE=coverage_reports/unit_tests.coverage coverage run --rcfile=tests.coveragerc -m pytest --ignore=integration -rf -v .
-	@echo "unit test coverage report:"
+	@echo "Unit test coverage report:"
 	COVERAGE_FILE=coverage_reports/unit_tests.coverage coverage report --rcfile=tests.coveragerc
 
 .PHONY: bench
@@ -75,12 +74,12 @@ bench:
 	python -m pytest --benchmark-json bench-results.json -rf -v bench/*.py
 
 .PHONY: integration
-integration:clean-test
+integration: clean-test
 	find integration -name '*.pyc' -exec rm {} \;
 	python -m pytest -rf -v integration
 
 .PHONY: integration-coverage
-integration-coverage:clean-test
+integration-coverage: clean-test
 	find integration -name '*.pyc' -exec rm {} \;
 	rm -f coverage_reports/integration.coverage
 	COVERAGE_FILE=coverage_reports/integration.coverage coverage run --rcfile=tests.coveragerc -m pytest -rf -v integration
