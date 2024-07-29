@@ -52,21 +52,18 @@ flake8:
 	@echo "Running flake8 lint..."
 	@python -m flake8 $(FLAKE8_OPTIONS) $(CHECKED_IN_PYTHON_FILES)
 
-.PHONY: clean-test
-clean-test:
+.PHONY: clean
+clean:
 	find storey -name '*.pyc' -exec rm {} \;
 	find tests -name '*.pyc' -exec rm {} \;
-
-.PHONY: clean-integration
-clean-integration: clean-test
 	find integration -name '*.pyc' -exec rm {} \;
 
 .PHONY: test
-test: clean-test
+test: clean
 	python -m pytest --ignore=integration -rf -v .
 
 .PHONY: test-coverage
-test-coverage: clean-test
+test-coverage: clean
 	rm -f coverage_reports/unit_tests.coverage
 	COVERAGE_FILE=coverage_reports/unit_tests.coverage coverage run --rcfile=tests.coveragerc -m pytest --ignore=integration -rf -v .
 	@echo "Unit test coverage report:"
@@ -78,11 +75,11 @@ bench:
 	python -m pytest --benchmark-json bench-results.json -rf -v bench/*.py
 
 .PHONY: integration
-integration: clean-integration
+integration: clean
 	python -m pytest -rf -v integration
 
 .PHONY: integration-coverage
-integration-coverage: clean-integration
+integration-coverage: clean
 	rm -f coverage_reports/integration.coverage
 	COVERAGE_FILE=coverage_reports/integration.coverage coverage run --rcfile=tests.coveragerc -m pytest -rf -v integration
 	@echo "Integration test coverage report:"
