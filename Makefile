@@ -54,9 +54,7 @@ flake8:
 
 .PHONY: clean
 clean:
-	find storey -name '*.pyc' -exec rm {} \;
-	find tests -name '*.pyc' -exec rm {} \;
-	find integration -name '*.pyc' -exec rm {} \;
+	find storey test integration -name '*.pyc' -exec rm {} \;
 
 .PHONY: test
 test: clean
